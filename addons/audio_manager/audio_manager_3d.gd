@@ -232,3 +232,7 @@ func _warning_duration_zero() -> void:
 		push_warning("The audio duration cannot be less than or equal to zero. Check the properties: START_TIME, END_TIME and LOOP_OFFSET.")
 
 	pass
+
+
+func get_audio_stream_player3d() -> AudioStreamPlayer3D:
+	return _owner as AudioStreamPlayer3D
