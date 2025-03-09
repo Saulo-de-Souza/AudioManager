@@ -1,9 +1,32 @@
-class_name AudioManager extends Node3D
+class_name AudioManager extends Node
 
 
-@export_group("Audio Manager")
+@export_category("Omni")
+## List of audios. Similar to AudioStreamPlayer
 @export var audios_omni: Array[AudioMangerOmni] = []
+
+@export_category("2D")
+## Parent node of the node tree.
+@export var target_parent_audios_2d: Node2D = null:
+	set(value):
+		target_parent_audios_2d = value
+		for audio in audios_2d:
+			if is_instance_valid(_get_audio_controller_2d(audio.audio_name)):
+				_get_audio_controller_2d(audio.audio_name).reparent(target_parent_audios_2d)
+				_get_audio_controller_2d(audio.audio_name).position = Vector2.ZERO
+## List of 2d audios. Similar to AudioStreamPlayer2D
 @export var audios_2d: Array[AudioManger2D] = []
+
+@export_category("3D")
+## Parent node of the node tree.
+@export var target_parent_audios_3d: Node3D = null:
+	set(value):
+		target_parent_audios_3d = value
+		for audio in audios_3d:
+			if is_instance_valid(_get_audio_controller_3d(audio.audio_name)):
+				_get_audio_controller_3d(audio.audio_name).reparent(target_parent_audios_3d)
+				_get_audio_controller_3d(audio.audio_name).position = Vector3.ZERO
+## List of 3d audios. Similar to AudioStreamPlayer3D
 @export var audios_3d: Array[AudioManger3D] = []
 
 
@@ -390,7 +413,11 @@ func _init_audios_2d() -> void:
 		audio_2d._owner = new_audio_manager_controller_2d
 		_setup_audio_properties_2d(new_audio_manager_controller_2d, audio_2d)
 		audios_manager_controller_2d[audio_2d.audio_name] = new_audio_manager_controller_2d
-		add_child(new_audio_manager_controller_2d)
+		
+		if is_instance_valid(target_parent_audios_2d):
+			target_parent_audios_2d.add_child(new_audio_manager_controller_2d)
+		else:
+			push_error("target_parent_audios_2d is null")
 
 		if audio_2d.duration > 0 and audio_2d.auto_play:
 			play_audio_2d(audio_2d.audio_name)
@@ -408,9 +435,14 @@ func _init_audios_3d() -> void:
 			)
 		
 		audio_3d._owner = new_audio_manager_controller_3d
+		
 		_setup_audio_properties_3d(new_audio_manager_controller_3d, audio_3d)
 		audios_manager_controller_3d[audio_3d.audio_name] = new_audio_manager_controller_3d
-		add_child(new_audio_manager_controller_3d)
+		
+		if is_instance_valid(target_parent_audios_3d):
+			target_parent_audios_3d.add_child(new_audio_manager_controller_3d)
+		else:
+			push_error("target_parent_audios_3d is null")
 
 		if audio_3d.duration > 0 and audio_3d.auto_play:
 			play_audio_3d(audio_3d.audio_name)

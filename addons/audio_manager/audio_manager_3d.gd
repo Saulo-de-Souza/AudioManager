@@ -35,7 +35,7 @@ var duration: float = 0.0:
 			_owner.stream = value
 			_owner.duration = duration
 			
-			
+
 ## Enable or disable clipper in audio.
 ## if true, you have to configure the start_time and and_time and the subtraction of end_time by start_time together with the loop_offset cannot be less than zero.
 @export var use_clipper: bool = false:
