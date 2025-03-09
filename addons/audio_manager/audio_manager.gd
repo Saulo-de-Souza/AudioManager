@@ -10,10 +10,15 @@ class_name AudioManager extends Node
 @export var target_parent_audios_2d: Node2D = null:
 	set(value):
 		target_parent_audios_2d = value
-		for audio in audios_2d:
-			if is_instance_valid(_get_audio_controller_2d(audio.audio_name)):
-				_get_audio_controller_2d(audio.audio_name).reparent(target_parent_audios_2d)
-				_get_audio_controller_2d(audio.audio_name).position = Vector2.ZERO
+		if is_instance_valid(target_parent_audios_2d):
+			for audio in audios_2d:
+				var audio_controller = _get_audio_controller_2d(audio.audio_name)
+				if is_instance_valid(audio_controller):
+					if not audio_controller.is_inside_tree():
+						target_parent_audios_2d.add_child(audio_controller)
+					else:
+						audio_controller.reparent(target_parent_audios_2d)
+					audio_controller.position = Vector2.ZERO
 ## List of 2d audios. Similar to AudioStreamPlayer2D
 @export var audios_2d: Array[AudioManger2D] = []
 
@@ -22,10 +27,15 @@ class_name AudioManager extends Node
 @export var target_parent_audios_3d: Node3D = null:
 	set(value):
 		target_parent_audios_3d = value
-		for audio in audios_3d:
-			if is_instance_valid(_get_audio_controller_3d(audio.audio_name)):
-				_get_audio_controller_3d(audio.audio_name).reparent(target_parent_audios_3d)
-				_get_audio_controller_3d(audio.audio_name).position = Vector3.ZERO
+		if is_instance_valid(target_parent_audios_3d): 
+			for audio in audios_3d:
+				var audio_controller = _get_audio_controller_3d(audio.audio_name)
+				if is_instance_valid(audio_controller):
+					if not audio_controller.is_inside_tree():
+						target_parent_audios_3d.add_child(audio_controller)
+					else:
+						audio_controller.reparent(target_parent_audios_3d)
+					audio_controller.position = Vector3.ZERO
 ## List of 3d audios. Similar to AudioStreamPlayer3D
 @export var audios_3d: Array[AudioManger3D] = []
 
@@ -48,6 +58,9 @@ func play_audio_omni(audio_name: String) -> void:
 	if not audio:
 		return
 		
+	if not audio.is_inside_tree():
+		return
+		
 	if float(audio.duration) <= 0.0:
 		return
 
@@ -66,6 +79,9 @@ func play_audio_omni(audio_name: String) -> void:
 func play_audio_2d(audio_name: String) -> void:
 	var audio = _validate_audio_2d(audio_name)
 	if not audio:
+		return
+		
+	if not audio.is_inside_tree():
 		return
 		
 	if float(audio.duration) <= 0.0:
@@ -88,6 +104,9 @@ func play_audio_3d(audio_name: String) -> void:
 	if not audio:
 		return
 		
+	if not audio.is_inside_tree():
+		return
+		
 	if float(audio.duration) <= 0.0:
 		return
 
@@ -107,7 +126,10 @@ func pause_audio_omni(audio_name: String) -> void:
 	var audio = _validate_audio_omni(audio_name)
 	if not audio or audio.stream_paused:
 		return
-
+		
+	if not audio.is_inside_tree():
+		return
+	
 	var timer: Timer = _setup_timer_omni(audio_name)
 	audio.stream_paused = true
 	audio.time_remain = timer.time_left
@@ -120,7 +142,10 @@ func pause_audio_2d(audio_name: String) -> void:
 	var audio = _validate_audio_2d(audio_name)
 	if not audio or audio.stream_paused:
 		return
-
+		
+	if not audio.is_inside_tree():
+		return
+	
 	var timer: Timer = _setup_timer_2d(audio_name)
 	audio.stream_paused = true
 	audio.time_remain = timer.time_left
@@ -133,7 +158,10 @@ func pause_audio_3d(audio_name: String) -> void:
 	var audio = _validate_audio_3d(audio_name)
 	if not audio or audio.stream_paused:
 		return
-
+		
+	if not audio.is_inside_tree():
+		return
+	
 	var timer: Timer = _setup_timer_3d(audio_name)
 	audio.stream_paused = true
 	audio.time_remain = timer.time_left
@@ -146,7 +174,10 @@ func continue_audio_omni(audio_name: String) -> void:
 	var audio = _validate_audio_omni(audio_name)
 	if not audio or not audio.stream_paused:
 		return
-
+		
+	if not audio.is_inside_tree():
+		return
+	
 	var timer: Timer = _setup_timer_omni(audio_name)
 	audio.stream_paused = false
 	timer.start(audio.time_remain)
@@ -158,7 +189,10 @@ func continue_audio_2d(audio_name: String) -> void:
 	var audio = _validate_audio_2d(audio_name)
 	if not audio or not audio.stream_paused:
 		return
-
+		
+	if not audio.is_inside_tree():
+		return
+	
 	var timer: Timer = _setup_timer_2d(audio_name)
 	audio.stream_paused = false
 	timer.start(audio.time_remain)
@@ -170,7 +204,10 @@ func continue_audio_3d(audio_name: String) -> void:
 	var audio = _validate_audio_3d(audio_name)
 	if not audio or not audio.stream_paused:
 		return
-
+		
+	if not audio.is_inside_tree():
+		return
+	
 	var timer: Timer = _setup_timer_3d(audio_name)
 	audio.stream_paused = false
 	timer.start(audio.time_remain)
@@ -181,6 +218,9 @@ func continue_audio_3d(audio_name: String) -> void:
 func stop_audio_omni(audio_name: String) -> void:
 	var audio = _validate_audio_omni(audio_name)
 	if not audio or not audio.playing:
+		return
+		
+	if not audio.is_inside_tree():
 		return
 	
 	var timer: Timer = _setup_timer_omni(audio_name)
@@ -195,6 +235,9 @@ func stop_audio_2d(audio_name: String) -> void:
 	var audio = _validate_audio_2d(audio_name)
 	if not audio or not audio.playing:
 		return
+		
+	if not audio.is_inside_tree():
+		return
 	
 	var timer: Timer = _setup_timer_2d(audio_name)
 	
@@ -207,6 +250,9 @@ func stop_audio_2d(audio_name: String) -> void:
 func stop_audio_3d(audio_name: String) -> void:
 	var audio = _validate_audio_3d(audio_name)
 	if not audio or not audio.playing:
+		return
+		
+	if not audio.is_inside_tree():
 		return
 	
 	var timer: Timer = _setup_timer_3d(audio_name)
@@ -221,7 +267,7 @@ func play_all() -> void:
 	for a in audios_omni:
 		play_audio_omni(a.audio_name)
 		
-	for a in audios_2d:
+	for a in audios_2d:	
 		play_audio_2d(a.audio_name)
 		
 	for a in audios_3d:

@@ -13,7 +13,7 @@ var audio_manager_3d = preload("res://addons/audio_manager/audio_manager_3d.gd")
 
 
 func _enter_tree() -> void:
-	add_custom_type("AudioManager", "Node3D", main_script, icon_omni)
+	add_custom_type("AudioManager", "Node", main_script, icon_omni)
 	add_custom_type("AudioManger1D", "Resource", audio_manager_omni, icon_omni)
 	add_custom_type("AudioManger2D", "Resource", audio_manager_2d, icon_2d)
 	add_custom_type("AudioManger3D", "Resource", audio_manager_3d, icon_3d)
