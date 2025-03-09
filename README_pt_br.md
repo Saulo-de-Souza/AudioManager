@@ -82,9 +82,17 @@ Você também pode controlar todas as faixas de áudio de um tipo específico ou
 ### Recuperando Recursos de Áudio
 
 Você pode acessar os recursos de áudio diretamente para modificar suas propriedades em tempo de execução:
-- **Obter Recurso de Áudio**: ```gdscript var audio_omni = AudioManager.get_audio_omni("audio_name") ```  
-  ```gdscript var audio_2d = AudioManager.get_audio_2d("audio_name") ```  
-  ```gdscript var audio_3d = AudioManager.get_audio_3d("audio_name") ```
+- **Obter Recurso de Áudio**: 
+
+    ```v 
+        var audio_omni = $audio_manager.get_audio_omni("audio_name") 
+    ```  
+    ```v 
+        var audio_2d = $audio_manager.get_audio_2d("audio_name") 
+    ```  
+    ```v 
+        var audio_3d = $audio_manager.get_audio_3d("audio_name") 
+    ```
 
 ## Configuração
 
@@ -103,6 +111,18 @@ Cada faixa de áudio pode ser configurada com as seguintes propriedades:
 - **Força de Panning** (2D e 3D): A intensidade do efeito de panning.
 
 Essas propriedades podem ser definidas diretamente no editor do Godot via o **Inspector** ao selecionar uma entrada de áudio no nó **AudioManager**.
+
+### Configuração de Áudio Posicional (2D e 3D)
+
+As propriedades `target_parent_audios_2d` e `target_parent_audios_3d` definem o nó pai onde os reprodutores de áudio 2D e 3D serão instanciados, permitindo que os áudios tenham posições específicas nas cenas 2D ou 3D. Isso é essencial para efeitos como atenuação de volume baseada em distância, panning (em 2D) e áudio espacial (em 3D):
+- **`target_parent_audios_2d`**: Define o nó pai (do tipo `Node2D`) para os áudios 2D. Vincule-o a um nó com posição na cena 2D (ex.: um personagem) para que efeitos posicionais, como variação de volume e panning, funcionem corretamente com base na distância e localização do ouvinte.
+- **`target_parent_audios_3d`**: Define o nó pai (do tipo `Node3D`) para os áudios 3D. Vincule-o a um nó com posição no espaço 3D (ex.: um objeto ou inimigo) para habilitar efeitos de áudio espacial, como atenuação de volume, direção do som e Doppler, dependendo da posição relativa ao ouvinte.
+
+#### Atenção: Necessidade de um Ouvinte de Áudio
+Para que o som seja ouvido e os efeitos posicionais funcionem, **é obrigatório** ter um ouvinte de áudio configurado na cena:
+- Para áudio **2D**: Adicione um nó `AudioListener2D` ou configure uma câmera 2D como ouvinte (propriedade `current` ativada).
+- Para áudio **3D**: Adicione um nó `AudioListener3D` ou configure uma câmera 3D como ouvinte (propriedade `current` ativada).
+**Alerta**: Sem um ouvinte (`AudioListener2D` ou `AudioListener3D`) ou uma câmera configurada, o áudio não será reproduzido corretamente, e os efeitos de distância e posição não funcionarão.
 
 ## Exemplos
 
@@ -123,7 +143,10 @@ Alternativamente, toque programaticamente: ```gdscript AudioManager.play_audio_o
 5. Atribua um arquivo de áudio ao **Fluxo de Áudio**.
 6. Configure **Distância Máxima** para controlar até onde o som pode ser ouvido.
 
-Toque o som quando necessário: ```gdscript AudioManager.play_audio_3d("explosion") ```
+Toque o som quando necessário: 
+```v 
+$audio_manager.play_audio_3d("explosion") 
+```
 
 ### Exemplo 3: Fazendo Loop em um Clipe de Áudio Recortado
 1. Adicione um nó **AudioManager** à sua cena.
