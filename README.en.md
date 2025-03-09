@@ -41,50 +41,166 @@ The **AudioManager** centralizes audio management in Godot, allowing you to defi
 You can control audio playback using the following methods:
 
 #### Omni Audio
-- **Play Audio**: ```gdscript AudioManager.play_audio_omni("audio_name") ```
-- **Pause Audio**: ```gdscript AudioManager.pause_audio_omni("audio_name") ```
-- **Resume Audio**: ```gdscript AudioManager.continue_audio_omni("audio_name") ```
-- **Stop Audio**: ```gdscript AudioManager.stop_audio_omni("audio_name") ```
+
+```cpp
+# Play omni audio
+$audio_manager.play_audio_omni("audio_name") 
+```
+ 
+```cpp
+# Pause omni audio
+$audio_manager.pause_audio_omni("audio_name") 
+```
+
+```cpp
+# Resume omni audio
+$audio_manager.continue_audio_omni("audio_name") 
+```
+
+```cpp
+# Stop omni audio
+$audio_manager.stop_audio_omni("audio_name") 
+```
 
 #### 2D Audio
-- **Play Audio**: ```gdscript AudioManager.play_audio_2d("audio_name") ```
-- **Pause Audio**: ```gdscript AudioManager.pause_audio_2d("audio_name") ```
-- **Resume Audio**: ```gdscript AudioManager.continue_audio_2d("audio_name") ```
-- **Stop Audio**: ```gdscript AudioManager.stop_audio_2d("audio_name") ```
+```cpp
+# Play 2d audio 
+$audio_manager.play_audio_2d("audio_name") 
+```
+```cpp
+# Pause 2d audio
+$audio_manager.pause_audio_2d("audio_name") 
+```
+```cpp
+# Resume 2d audio 
+$audio_manager.continue_audio_2d("audio_name") 
+```
+```cpp
+# Stop 2d audio
+$audio_manager.stop_audio_2d("audio_name") 
+```
 
 #### 3D Audio
-- **Play Audio**: ```gdscript AudioManager.play_audio_3d("audio_name") ```
-- **Pause Audio**: ```gdscript AudioManager.pause_audio_3d("audio_name") ```
-- **Resume Audio**: ```gdscript AudioManager.continue_audio_3d("audio_name") ```
-- **Stop Audio**: ```gdscript AudioManager.stop_audio_3d("audio_name") ```
+```cpp
+# Play 3d audio
+$audio_manager.play_audio_3d("audio_name") 
+```
+```cpp
+# Pause 3d audio
+$audio_manager.pause_audio_3d("audio_name") 
+```
+```cpp
+# Resume 3d audio
+$audio_manager.continue_audio_3d("audio_name") 
+```
+```cpp
+# Stop 3d audio
+$audio_manager.stop_audio_3d("audio_name") 
+```
 
 ### Bulk Playback Control
 
 You can also control all audio tracks of a specific type or all types at once:
 
-- **Play All Audio**: ```gdscript AudioManager.play_all() ``` # Plays all Omni, 2D, and 3D audio  
-  ```gdscript AudioManager.play_all_omni() ``` # Plays all Omni audio  
-  ```gdscript AudioManager.play_all_2d() ``` # Plays all 2D audio  
-  ```gdscript AudioManager.play_all_3d() ``` # Plays all 3D audio  
-- **Stop All Audio**: ```gdscript AudioManager.stop_all() ``` # Stops all Omni, 2D, and 3D audio  
-  ```gdscript AudioManager.stop_all_omni() ``` # Stops all Omni audio  
-  ```gdscript AudioManager.stop_all_2d() ``` # Stops all 2D audio  
-  ```gdscript AudioManager.stop_all_3d() ``` # Stops all 3D audio  
-- **Pause All Audio**: ```gdscript AudioManager.pause_all() ``` # Pauses all Omni, 2D, and 3D audio  
-  ```gdscript AudioManager.pause_all_omni() ``` # Pauses all Omni audio  
-  ```gdscript AudioManager.pause_all_2d() ``` # Pauses all 2D audio  
-  ```gdscript AudioManager.pause_all_3d() ``` # Pauses all 3D audio  
-- **Resume All Audio**: ```gdscript AudioManager.continue_all() ``` # Resumes all paused Omni, 2D, and 3D audio  
-  ```gdscript AudioManager.continue_all_omni() ``` # Resumes all paused Omni audio  
-  ```gdscript AudioManager.continue_all_2d() ``` # Resumes all paused 2D audio  
-  ```gdscript AudioManager.continue_all_3d() ``` # Resumes all paused 3D audio  
+- **Play All Audio**: 
+
+  ```cpp
+   # Plays all Omni, 2D, and 3D audio 
+   $audio_manager.play_all() 
+   ```  
+  
+  ```cpp
+   # Plays all Omni audio
+   $audio_manager.play_all_omni() 
+   ```   
+  
+  ```cpp
+   # Plays all 2D audio  
+   $audio_manager.play_all_2d() 
+   ``` 
+  
+  ```cpp
+   # Plays all 3D audio  
+   $audio_manager.play_all_3d() 
+   ``` 
+
+- **Stop All Audio**: 
+
+  ```cpp
+   # Stops all Omni, 2D, and 3D audio
+   $audio_manager.stop_all() 
+   ```   
+  
+  ```cpp
+   # Stops all Omni audio  
+   $audio_manager.stop_all_omni() 
+   ``` 
+  
+  ```cpp
+   # Stops all 2D audio  
+   $audio_manager.stop_all_2d() 
+   ``` 
+  
+  ```cpp
+   # Stops all 3D audio 
+   $audio_manager.stop_all_3d() 
+   ```  
+ 
+- **Pause All Audio**: 
+
+  ```cpp
+   # Pauses all Omni, 2D, and 3D audio 
+   $audio_manager.pause_all() 
+   ```  
+  
+  ```cpp
+   # Pauses all Omni audio  
+   $audio_manager.pause_all_omni() 
+   ``` 
+  
+  ```cpp
+   # Pauses all 2D audio  
+   $audio_manager.pause_all_2d() 
+   ``` 
+  
+  ```cpp
+   # Pauses all 3D audio 
+   $audio_manager.pause_all_3d() 
+   ```  
+
+- **Resume All Audio**: 
+
+  ```cpp
+  # Resumes all paused Omni, 2D, and 3D audio
+  $audio_manager.continue_all()   
+  ```
+  ```cpp
+  # Resumes all paused Omni audio  
+  $audio_manager.continue_all_omni() 
+  ```
+  ```cpp
+  # Resumes all paused 2D audio
+  $audio_manager.continue_all_2d() 
+  ``` 
+  ```cpp
+  # Resumes all paused 3D audio  
+  $audio_manager.continue_all_3d() 
+  ``` 
 
 ### Retrieving Audio Resources
 
 You can access audio resources directly to modify their properties at runtime:
-- **Get Audio Resource**: ```gdscript var audio_omni = AudioManager.get_audio_omni("audio_name") ```  
-  ```gdscript var audio_2d = AudioManager.get_audio_2d("audio_name") ```  
-  ```gdscript var audio_3d = AudioManager.get_audio_3d("audio_name") ```
+- **Get Audio Resource**: 
+
+  ```v
+  var audio_omni = $audio_manager.get_audio_omni("audio_name") 
+  ```  
+  ```v
+  var audio_2d = $audio_manager.get_audio_2d("audio_name") 
+  ```  
+  ```v
+  var audio_3d = $audio_manager.get_audio_3d("audio_name") 
+  ```
 
 ## Configuration
 
@@ -125,7 +241,10 @@ For audio to be heard and positional effects to work, **you must** have an audio
 4. Assign an audio file to **Audio Stream**.
 5. Set **Auto-Play** to `true` to start playback when the scene loads.
 
-Alternatively, play it programmatically: ```gdscript AudioManager.play_audio_omni("background_music") ```
+Alternatively, play it programmatically: 
+```v 
+$audio_manager.play_audio_omni("background_music") 
+```
 
 ### Example 2: Playing a 3D Sound Effect
 1. Add an **AudioManager** node to your scene.
@@ -135,7 +254,10 @@ Alternatively, play it programmatically: ```gdscript AudioManager.play_audio_omn
 5. Assign an audio file to **Audio Stream**.
 6. Configure **Max Distance** to control how far the sound can be heard.
 
-Play the sound when needed: ```gdscript AudioManager.play_audio_3d("explosion") ```
+Play the sound when needed: 
+```v 
+$audio_manager.play_audio_3d("explosion") 
+```
 
 ### Example 3: Looping a Trimmed Audio Clip
 1. Add an **AudioManager** node to your scene.
@@ -151,7 +273,12 @@ This will play the audio from 2 to 10 seconds and loop it continuously.
 ## Screenshots
 
 ![Screenshot 1](./addons/audio_manager/images/screenshots/screenshot_1.png)
-![Screenshot 2](./addons/audio_manager/images/screenshots/screenshot_2.png)
+
+![Screenshot omni](./addons/audio_manager/images/screenshots/screenshot_omni.png)
+
+![Screenshot omni](./addons/audio_manager/images/screenshots/screenshot_2d.png)
+
+![Screenshot omni](./addons/audio_manager/images/screenshots/screenshot_3d.png)
 
 ## License
 
@@ -159,4 +286,4 @@ This plugin is available under the [MIT License](LICENSE.md).
 
 ## Contact
 
-For support or feedback, reach out at [your-email@example.com].
+For support or feedback, reach out at [saulocoexi@gmail.com].
