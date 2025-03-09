@@ -1,22 +1,22 @@
 class_name AudioManager extends Node3D
 
 
-enum AudioTypeEnum {ONE_D, TWO_D, THREE_D}
+enum AudioTypeEnum {OMNI, TWO_D, THREE_D}
 
 
 @export_group("Audio Manager")
-@export var audios_1d: Array[AudioManger1D] = []
+@export var audios_omni: Array[AudioMangerOmni] = []
 @export var audios_2d: Array[AudioManger2D] = []
 @export var audios_3d: Array[AudioManger3D] = []
 
 
-var audios_manager_controller_1d: Dictionary = {}
+var audios_manager_controller_omni: Dictionary = {}
 var audios_manager_controller_2d: Dictionary = {}
 var audios_manager_controller_3d: Dictionary = {}
 
 
 func _ready() -> void:
-	_init_audios_1d()
+	_init_audios_omni()
 	_init_audios_2d()
 	_init_audios_3d()
 	pass
@@ -24,14 +24,14 @@ func _ready() -> void:
 
 ## Play audio by name
 func play_audio(_audio_name: String, _type: AudioTypeEnum) -> void:
-	var audio = _validate_audio_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _validate_audio_1d(_audio_name) if _type == AudioTypeEnum.ONE_D else _validate_audio_2d(_audio_name)
+	var audio = _validate_audio_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _validate_audio_omni(_audio_name) if _type == AudioTypeEnum.OMNI else _validate_audio_2d(_audio_name)
 	if not audio:
 		return
 		
 	if float(audio.duration) <= 0.0:
 		return
 
-	var timer: Timer = _setup_timer_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _setup_timer_1d(_audio_name) if _type == AudioTypeEnum.ONE_D else _setup_timer_2d(_audio_name)
+	var timer: Timer = _setup_timer_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _setup_timer_omni(_audio_name) if _type == AudioTypeEnum.OMNI else _setup_timer_2d(_audio_name)
 
 	if audio.use_clipper:
 		audio.play(audio.start_time)
@@ -44,11 +44,11 @@ func play_audio(_audio_name: String, _type: AudioTypeEnum) -> void:
 
 ## Pause audio by name
 func pause_audio(_audio_name: String, _type: AudioTypeEnum) -> void:
-	var audio = _validate_audio_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _validate_audio_1d(_audio_name) if _type == AudioTypeEnum.ONE_D else _validate_audio_2d(_audio_name)
+	var audio = _validate_audio_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _validate_audio_omni(_audio_name) if _type == AudioTypeEnum.OMNI else _validate_audio_2d(_audio_name)
 	if not audio or audio.stream_paused:
 		return
 
-	var timer: Timer = _setup_timer_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _setup_timer_1d(_audio_name) if _type == AudioTypeEnum.ONE_D else _setup_timer_2d(_audio_name)
+	var timer: Timer = _setup_timer_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _setup_timer_omni(_audio_name) if _type == AudioTypeEnum.OMNI else _setup_timer_2d(_audio_name)
 	audio.stream_paused = true
 	audio.time_remain = timer.time_left
 	timer.stop()
@@ -57,11 +57,11 @@ func pause_audio(_audio_name: String, _type: AudioTypeEnum) -> void:
 
 ## Continue audio by name
 func continue_audio(_audio_name: String, _type: AudioTypeEnum) -> void:
-	var audio = _validate_audio_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _validate_audio_1d(_audio_name) if _type == AudioTypeEnum.ONE_D else _validate_audio_2d(_audio_name)
+	var audio = _validate_audio_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _validate_audio_omni(_audio_name) if _type == AudioTypeEnum.OMNI else _validate_audio_2d(_audio_name)
 	if not audio or not audio.stream_paused:
 		return
 
-	var timer: Timer = _setup_timer_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _setup_timer_1d(_audio_name) if _type == AudioTypeEnum.ONE_D else _setup_timer_2d(_audio_name)
+	var timer: Timer = _setup_timer_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _setup_timer_omni(_audio_name) if _type == AudioTypeEnum.OMNI else _setup_timer_2d(_audio_name)
 	audio.stream_paused = false
 	timer.start(audio.time_remain)
 	pass
@@ -69,11 +69,11 @@ func continue_audio(_audio_name: String, _type: AudioTypeEnum) -> void:
 
 ## Stop audio by name
 func stop_audio(_audio_name: String, _type: AudioTypeEnum) -> void:
-	var audio = _validate_audio_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _validate_audio_1d(_audio_name) if _type == AudioTypeEnum.ONE_D else _validate_audio_2d(_audio_name)
+	var audio = _validate_audio_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _validate_audio_omni(_audio_name) if _type == AudioTypeEnum.OMNI else _validate_audio_2d(_audio_name)
 	if not audio or not audio.playing:
 		return
 	
-	var timer: Timer = _setup_timer_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _setup_timer_1d(_audio_name) if _type == AudioTypeEnum.ONE_D else _setup_timer_2d(_audio_name)
+	var timer: Timer = _setup_timer_3d(_audio_name) if _type == AudioTypeEnum.THREE_D else _setup_timer_omni(_audio_name) if _type == AudioTypeEnum.OMNI else _setup_timer_2d(_audio_name)
 	
 	timer.stop()
 	audio.stop()
@@ -82,8 +82,8 @@ func stop_audio(_audio_name: String, _type: AudioTypeEnum) -> void:
 
 ## Play all audios
 func play_all() -> void:
-	for a in audios_1d:
-		play_audio(a.audio_name, AudioTypeEnum.ONE_D)
+	for a in audios_omni:
+		play_audio(a.audio_name, AudioTypeEnum.OMNI)
 		
 	for a in audios_2d:
 		play_audio(a.audio_name, AudioTypeEnum.TWO_D)
@@ -93,10 +93,31 @@ func play_all() -> void:
 	pass
 
 
+## Play all audios omni
+func play_all_omni() -> void:
+	for a in audios_omni:
+		play_audio(a.audio_name, AudioTypeEnum.OMNI)
+	pass
+
+
+## Play all audios 2D
+func play_all_2d() -> void:
+	for a in audios_2d:
+		play_audio(a.audio_name, AudioTypeEnum.TWO_D)
+	pass
+
+
+## Play all audios 3D
+func play_all_3d() -> void:
+	for a in audios_3d:
+		play_audio(a.audio_name, AudioTypeEnum.THREE_D)
+	pass
+
+
 ## Stop all audios
 func stop_all() -> void:
-	for a in audios_1d:
-		stop_audio(a.audio_name, AudioTypeEnum.ONE_D)
+	for a in audios_omni:
+		stop_audio(a.audio_name, AudioTypeEnum.OMNI)
 		
 	for a in audios_2d:
 		stop_audio(a.audio_name, AudioTypeEnum.TWO_D)
@@ -106,10 +127,31 @@ func stop_all() -> void:
 	pass
 
 
+## Stop all audios Omni
+func stop_all_omni() -> void:
+	for a in audios_omni:
+		stop_audio(a.audio_name, AudioTypeEnum.OMNI)
+	pass
+
+
+## Stop all audios 2D
+func stop_all_2d() -> void:
+	for a in audios_2d:
+		stop_audio(a.audio_name, AudioTypeEnum.TWO_D)
+	pass
+
+
+## Stop all audios
+func stop_all_3d() -> void:
+	for a in audios_3d:
+		stop_audio(a.audio_name, AudioTypeEnum.THREE_D)
+	pass
+
+
 ## Pause all audios
 func pause_all() -> void:
-	for a in audios_1d:
-		pause_audio(a.audio_name, AudioTypeEnum.ONE_D)
+	for a in audios_omni:
+		pause_audio(a.audio_name, AudioTypeEnum.OMNI)
 	
 	for a in audios_2d:
 		pause_audio(a.audio_name, AudioTypeEnum.TWO_D)
@@ -119,14 +161,56 @@ func pause_all() -> void:
 	pass
 
 
+## Pause all audios Omni
+func pause_all_omni() -> void:
+	for a in audios_omni:
+		pause_audio(a.audio_name, AudioTypeEnum.OMNI)
+	pass
+
+
+## Pause all audios
+func pause_all_2d() -> void:
+	for a in audios_2d:
+		pause_audio(a.audio_name, AudioTypeEnum.TWO_D)
+	pass
+
+
+## Pause all audios
+func pause_all_3d() -> void:
+	for a in audios_3d:
+		pause_audio(a.audio_name, AudioTypeEnum.THREE_D)
+	pass
+
+
 ## Continue all audios
 func continue_all() -> void:
-	for a in audios_1d:
-		continue_audio(a.audio_name, AudioTypeEnum.ONE_D)
+	for a in audios_omni:
+		continue_audio(a.audio_name, AudioTypeEnum.OMNI)
 		
 	for a in audios_2d:
 		continue_audio(a.audio_name, AudioTypeEnum.TWO_D)
 		
+	for a in audios_3d:
+		continue_audio(a.audio_name, AudioTypeEnum.THREE_D)
+	pass
+
+
+## Continue all audios Omni
+func continue_all_omni() -> void:
+	for a in audios_omni:
+		continue_audio(a.audio_name, AudioTypeEnum.OMNI)
+	pass
+
+
+## Continue all audios
+func continue_all_2d() -> void:
+	for a in audios_2d:
+		continue_audio(a.audio_name, AudioTypeEnum.TWO_D)
+	pass
+
+
+## Continue all audios
+func continue_all_3d() -> void:
 	for a in audios_3d:
 		continue_audio(a.audio_name, AudioTypeEnum.THREE_D)
 	pass
@@ -141,12 +225,12 @@ func get_audio_3d(_audio_name: String) -> AudioManger3D:
 	return null
 	
 	
-## Get audio 1D (AudioManger1D)
-func get_audio_1d(_audio_name: String) -> AudioManger1D:
-	for aud in audios_1d:
+## Get audio Omni (AudioMangerOmni)
+func get_audio_omni(_audio_name: String) -> AudioMangerOmni:
+	for aud in audios_omni:
 		if aud.audio_name == _audio_name:
 			return aud
-	push_warning("AudioManger1D %s not find."%_audio_name)
+	push_warning("AudioMangerOmni %s not find."%_audio_name)
 	return null
 	
 	
@@ -160,23 +244,23 @@ func get_audio_2d(_audio_name: String) -> AudioManger2D:
 
 
 ## Init audios instances
-func _init_audios_1d() -> void:
-	for audio_1d in audios_1d:
-		if not _check_audio(audio_1d):
+func _init_audios_omni() -> void:
+	for audio_omni in audios_omni:
+		if not _check_audio(audio_omni):
 			continue
-		_warning_audio(audio_1d)
+		_warning_audio(audio_omni)
 
-		var new_audio_manager_controller_1d: AudioManagerController1D = AudioManagerController1D.new(
-			audio_1d.start_time, audio_1d.duration, audio_1d.use_clipper, audio_1d.loop, 0.0, false
+		var new_audio_manager_controller_omni: AudioManagerControllerOmni = AudioManagerControllerOmni.new(
+			audio_omni.start_time, audio_omni.duration, audio_omni.use_clipper, audio_omni.loop, 0.0, false
 			)
 		
-		audio_1d._owner = new_audio_manager_controller_1d
-		_setup_audio_properties_1d(new_audio_manager_controller_1d, audio_1d)
-		audios_manager_controller_1d[audio_1d.audio_name] = new_audio_manager_controller_1d
-		add_child(new_audio_manager_controller_1d)
+		audio_omni._owner = new_audio_manager_controller_omni
+		_setup_audio_properties_omni(new_audio_manager_controller_omni, audio_omni)
+		audios_manager_controller_omni[audio_omni.audio_name] = new_audio_manager_controller_omni
+		add_child(new_audio_manager_controller_omni)
 
-		if audio_1d.duration > 0 and audio_1d.auto_play:
-			play_audio(audio_1d.audio_name, AudioTypeEnum.ONE_D)
+		if audio_omni.duration > 0 and audio_omni.auto_play:
+			play_audio(audio_omni.audio_name, AudioTypeEnum.OMNI)
 	pass
 
 
@@ -220,7 +304,7 @@ func _init_audios_3d() -> void:
 	pass
 	
 	
-func _setup_audio_properties_1d(audio: AudioStreamPlayer, a: AudioManger1D) -> void:
+func _setup_audio_properties_omni(audio: AudioStreamPlayer, a: AudioMangerOmni) -> void:
 	audio.stream = a.audio_stream
 	audio.volume_db = a.volume_db
 	audio.pitch_scale = a.pitch_scale
@@ -258,10 +342,10 @@ func _validate_audio_3d(_audio_name: String) -> AudioManagerController3D:
 	return audio
 	
 	
-func _validate_audio_1d(_audio_name: String) -> AudioManagerController1D:
-	var audio = _get_audio_controller_1d(_audio_name)
+func _validate_audio_omni(_audio_name: String) -> AudioManagerControllerOmni:
+	var audio = _get_audio_controller_omni(_audio_name)
 	if not audio:
-		push_warning("AudioManger1D name (%s) not found." % _audio_name)
+		push_warning("AudioMangerOmni name (%s) not found." % _audio_name)
 	return audio
 	
 	
@@ -272,12 +356,12 @@ func _validate_audio_2d(_audio_name: String) -> AudioManagerController2D:
 	return audio
 
 
-func _setup_timer_1d(_audio_name: String) -> Timer:
-	var audio = _get_audio_controller_1d(_audio_name) as AudioManagerController1D
+func _setup_timer_omni(_audio_name: String) -> Timer:
+	var audio = _get_audio_controller_omni(_audio_name) as AudioManagerControllerOmni
 	audio.timer.one_shot = not audio.loop
 	audio.timer.wait_time = max(audio.duration, 0.00001)
 	if not audio.is_timer_connected:
-		audio.timer.timeout.connect(Callable(_on_timer_timeout_1d).bind(audio, _audio_name, func(): play_audio(_audio_name, AudioTypeEnum.ONE_D)))
+		audio.timer.timeout.connect(Callable(_on_timer_timeout_omni).bind(audio, _audio_name, func(): play_audio(_audio_name, AudioTypeEnum.OMNI)))
 		audio.is_timer_connected = true
 	return audio.timer
 	
@@ -302,7 +386,7 @@ func _setup_timer_3d(_audio_name: String) -> Timer:
 	return audio.timer
 
 
-func _on_timer_timeout_1d(_audio: AudioManagerController1D, _audio_name: String, cb: Callable) -> void:
+func _on_timer_timeout_omni(_audio: AudioManagerControllerOmni, _audio_name: String, cb: Callable) -> void:
 	if _audio.loop:
 		cb.call()
 	else:
@@ -326,8 +410,8 @@ func _on_timer_timeout_3d(_audio: AudioManagerController3D, _audio_name: String,
 	pass
 
 
-func _get_audio_controller_1d(_audio_name: String) -> AudioManagerController1D:
-	return audios_manager_controller_1d.get(_audio_name, null) as AudioManagerController1D
+func _get_audio_controller_omni(_audio_name: String) -> AudioManagerControllerOmni:
+	return audios_manager_controller_omni.get(_audio_name, null) as AudioManagerControllerOmni
 
 
 func _get_audio_controller_2d(_audio_name: String) -> AudioManagerController2D:
@@ -344,7 +428,7 @@ func _warning_audio(_audio: Variant) -> void:
 	if _audio.duration <= 0.0:
 		push_warning("AudioManger duration cannot be less than or equal to zero. Check START_TIME, END_TIME. (%s)" % _audio.audio_name)
 	if _audio.use_clipper and _audio.start_time > _audio.end_time:
-		push_warning("Start time cannot be greater than end time in AudioMangerResource resource: (%s)" % _audio.audio_name)
+		push_warning("Start time cannot be greater than end time in AudioManger resource: (%s)" % _audio.audio_name)
 	pass
 	
 	
@@ -359,7 +443,7 @@ func _check_audio(_audio: Variant) -> bool:
 	
 	
 #*****************************************************************************
-class AudioManagerController1D extends AudioStreamPlayer:
+class AudioManagerControllerOmni extends AudioStreamPlayer:
 	var timer: Timer
 	var start_time: float
 	var duration: float

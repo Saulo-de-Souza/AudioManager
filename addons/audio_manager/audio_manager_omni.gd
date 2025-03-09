@@ -1,7 +1,7 @@
 @tool
-#TODO: Alterar para Omni
 
-class_name AudioManger1D extends Resource
+
+class_name AudioMangerOmni extends Resource
 
 var _warning_duration: int = 0
 var _can_warning_duration: bool = false
