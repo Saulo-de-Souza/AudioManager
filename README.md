@@ -272,11 +272,19 @@ This will play the audio from 2 to 10 seconds and loop it continuously.
 
 ## Screenshots
 
+**Screenshot AudioManager**
+
 ![Screenshot 1](./addons/audio_manager/images/screenshots/screenshot_1.png)
+
+**Screenshot Omni AudioManager**
 
 ![Screenshot omni](./addons/audio_manager/images/screenshots/screenshot_omni.png)
 
+**Screenshot 2D AudioManager**
+
 ![Screenshot omni](./addons/audio_manager/images/screenshots/screenshot_2d.png)
+
+**Screenshot 3D AudioManager**
 
 ![Screenshot omni](./addons/audio_manager/images/screenshots/screenshot_3d.png)
 
