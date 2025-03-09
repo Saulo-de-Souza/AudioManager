@@ -27,7 +27,7 @@ class_name AudioManager extends Node
 @export var target_parent_audios_3d: Node3D = null:
 	set(value):
 		target_parent_audios_3d = value
-		if is_instance_valid(target_parent_audios_3d): 
+		if is_instance_valid(target_parent_audios_3d):
 			for audio in audios_3d:
 				var audio_controller = _get_audio_controller_3d(audio.audio_name)
 				if is_instance_valid(audio_controller):
@@ -267,7 +267,7 @@ func play_all() -> void:
 	for a in audios_omni:
 		play_audio_omni(a.audio_name)
 		
-	for a in audios_2d:	
+	for a in audios_2d:
 		play_audio_2d(a.audio_name)
 		
 	for a in audios_3d:

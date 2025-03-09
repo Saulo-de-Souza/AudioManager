@@ -1,7 +1,7 @@
 
-# AudioManager3D - 3D Audio Management for Godot
+# AudioManager - Audio Management for Godot
 
-**AudioManager3D** is a plugin for the Godot Engine that enables advanced 3D audio management in your game. With this plugin, you can easily control and play sounds from a single node, offering options like audio trimming to set start and end times, looping, volume, pitch, distance, and more for each audio track.
+**AudioManager** is a plugin for the Godot Engine that enables advanced 3D audio management in your game. With this plugin, you can easily control and play sounds from a single node, offering options like audio trimming to set start and end times, looping, volume, pitch, distance, and more for each audio track.
 
 ## Features
 
@@ -15,7 +15,7 @@
 
 ## How It Works
 
-The **AudioManager3D** plugin enables management, playback, and control of audio within a single node in a 3D environment. It provides various options to configure audio properties. Parameters are exported to the Godot editor, allowing intuitive control directly from the interface.
+The **AudioManager** plugin enables management, playback, and control of audio within a single node in a 3D environment. It provides various options to configure audio properties. Parameters are exported to the Godot editor, allowing intuitive control directly from the interface.
 
 ## Usage Example
 
@@ -23,56 +23,56 @@ The **AudioManager3D** plugin enables management, playback, and control of audio
 
 ```gdscript
 # To start a 3D audio
-AudioManager3D.play_audio("audio_name")
+AudioManager.play_audio("audio_name")
 ```
 
 2. **Stop Audio**
 
 ```gdscript
 # To stop an audio
-AudioManager3D.stop_audio("audio_name")
+AudioManager.stop_audio("audio_name")
 ```
 
 3. **Pause Audio**
 
 ```gdscript
 # To pause an audio
-AudioManager3D.pause_audio("audio_name")
+AudioManager.pause_audio("audio_name")
 ```
 
 4. **Resume Audio**
 
 ```gdscript
 # To resume a paused audio
-AudioManager3D.continue_audio("audio_name")
+AudioManager.continue_audio("audio_name")
 ```
 
 5. **Play All Audio**
 
 ```gdscript
 # To play all audio
-AudioManager3D.play_all()
+AudioManager.play_all()
 ```
 
 6. **Stop All Audio**
 
 ```gdscript
 # To stop all currently playing audio
-AudioManager3D.stop_all()
+AudioManager.stop_all()
 ```
 
 7. **Pause All Audio**
 
 ```gdscript
 # To pause all currently playing audio
-AudioManager3D.pause_all()
+AudioManager.pause_all()
 ```
 
 8. **Resume All Audio**
 
 ```gdscript
 # To resume all paused audio
-AudioManager3D.continue_all()
+AudioManager.continue_all()
 ```
 
 ![Screenshot 1](./addons/audio_manager_3d/images/screenshots/screenshot_1.png)
