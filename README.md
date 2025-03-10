@@ -217,6 +217,16 @@ Each audio track can be configured with the following properties:
 - **Max Distance** (2D and 3D): The maximum distance for audio attenuation.
 - **Max Polyphony**: The maximum number of simultaneous streams.
 - **Panning Strength** (2D and 3D): The intensity of the panning effect.
+- **bus**: (Omni, 2D and 3D)
+- **playback_type**: (Omni, 2D and 3D)
+- **area_mask**: (2D and 3D)
+- **attenuation**: (2D)
+- **emission_angle_enabled**: (3D)
+- **emission_angle_degrees**: (3D)
+- **emission_angle_filter_attenuation_db**: (3D)
+- **attenuation_filter_cutoff_hz**: (3D)
+- **attenuation_filter_db**: (3D)
+- **doppler_tracking**: (3D)
 
 These properties can be set directly in the Godot editor via the **Inspector** by selecting an audio entry in the **AudioManager** node.
 
