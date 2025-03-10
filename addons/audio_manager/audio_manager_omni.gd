@@ -155,6 +155,23 @@ var duration: float = 0.0:
 			_owner.max_polyphony = value
 
 
+@export var bus: StringName = "Master":
+	set(value):
+		bus = value
+		if AudioServer.get_bus_index(value) == -1:
+			push_warning("Audio bus '%s' not found in AudioServer." % value)
+			return
+		if is_instance_valid(_owner):
+			_owner.bus = value
+			
+			
+@export var playback_type: AudioServer.PlaybackType = AudioServer.PLAYBACK_TYPE_DEFAULT:
+	set(value):
+		playback_type = value
+		if is_instance_valid(_owner):
+			_owner.playback_type = value
+
+
 func _increment_loop_offset() -> float:
 	if loop:
 		return loop_offset

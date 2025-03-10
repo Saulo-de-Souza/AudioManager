@@ -185,6 +185,72 @@ var duration: float = 0.0:
 			_owner.panning_strength = value
 		
 
+@export_flags_2d_physics var area_mask: int = 1:
+	set(value):
+		area_mask = value
+		if is_instance_valid(_owner):
+			_owner.area_mask = value
+
+
+@export var bus: StringName = "Master":
+	set(value):
+		bus = value
+		if AudioServer.get_bus_index(value) == -1:
+			push_warning("Audio bus '%s' not found in AudioServer." % value)
+			return
+		if is_instance_valid(_owner):
+			_owner.bus = value
+			
+			
+@export var playback_type: AudioServer.PlaybackType = AudioServer.PLAYBACK_TYPE_DEFAULT:
+	set(value):
+		playback_type = value
+		if is_instance_valid(_owner):
+			_owner.playback_type = value
+			
+			
+@export var emission_angle_enabled: bool = false:
+	set(value):
+		emission_angle_enabled = value
+		if is_instance_valid(_owner):
+			_owner.emission_angle_enabled = value
+		
+		
+@export_range(0.1, 90.0, 0.001, "suffix:deg") var emission_angle_degrees: float = 45.0:
+	set(value):
+		emission_angle_degrees = value
+		if is_instance_valid(_owner):
+			_owner.emission_angle_degrees = value
+		
+		
+@export_range(-80.0, 0.0, 0.001, "suffix:db") var emission_angle_filter_attenuation_db: float = -12.0:
+	set(value):
+		emission_angle_filter_attenuation_db = value
+		if is_instance_valid(_owner):
+			_owner.emission_angle_filter_attenuation_db = value
+		
+		
+@export_range(1, 20500, 1, "suffix:hz") var attenuation_filter_cutoff_hz: int = 5000:
+	set(value):
+		attenuation_filter_cutoff_hz = value
+		if is_instance_valid(_owner):
+			_owner.attenuation_filter_cutoff_hz = value
+	
+	
+@export_range(-80.0, 0.0, 0.001, "suffix:db") var attenuation_filter_db: float = -24.0:
+	set(value):
+		attenuation_filter_db = value
+		if is_instance_valid(_owner):
+			_owner.attenuation_filter_db = value
+	
+	
+@export var doppler_tracking: AudioStreamPlayer3D.DopplerTracking = AudioStreamPlayer3D.DopplerTracking.DOPPLER_TRACKING_DISABLED:
+	set(value):
+		doppler_tracking = value
+		if is_instance_valid(_owner):
+			_owner.doppler_tracking = value
+
+		
 func _increment_loop_offset() -> float:
 	if loop:
 		return loop_offset
