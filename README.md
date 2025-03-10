@@ -44,167 +44,182 @@ You can control audio playback using the following methods:
 
 ```cpp
 # Play omni audio
-$audio_manager.play_audio_omni("audio_name") 
+$audio_manager.play_audio_omni("audio_name")
 ```
- 
+
 ```cpp
 # Pause omni audio
-$audio_manager.pause_audio_omni("audio_name") 
+$audio_manager.pause_audio_omni("audio_name")
 ```
 
 ```cpp
 # Resume omni audio
-$audio_manager.continue_audio_omni("audio_name") 
+$audio_manager.continue_audio_omni("audio_name")
 ```
 
 ```cpp
 # Stop omni audio
-$audio_manager.stop_audio_omni("audio_name") 
+$audio_manager.stop_audio_omni("audio_name")
 ```
 
 #### 2D Audio
+
 ```cpp
-# Play 2d audio 
-$audio_manager.play_audio_2d("audio_name") 
+# Play 2d audio
+$audio_manager.play_audio_2d("audio_name")
 ```
+
 ```cpp
 # Pause 2d audio
-$audio_manager.pause_audio_2d("audio_name") 
+$audio_manager.pause_audio_2d("audio_name")
 ```
+
 ```cpp
-# Resume 2d audio 
-$audio_manager.continue_audio_2d("audio_name") 
+# Resume 2d audio
+$audio_manager.continue_audio_2d("audio_name")
 ```
+
 ```cpp
 # Stop 2d audio
-$audio_manager.stop_audio_2d("audio_name") 
+$audio_manager.stop_audio_2d("audio_name")
 ```
 
 #### 3D Audio
+
 ```cpp
 # Play 3d audio
-$audio_manager.play_audio_3d("audio_name") 
+$audio_manager.play_audio_3d("audio_name")
 ```
+
 ```cpp
 # Pause 3d audio
-$audio_manager.pause_audio_3d("audio_name") 
+$audio_manager.pause_audio_3d("audio_name")
 ```
+
 ```cpp
 # Resume 3d audio
-$audio_manager.continue_audio_3d("audio_name") 
+$audio_manager.continue_audio_3d("audio_name")
 ```
+
 ```cpp
 # Stop 3d audio
-$audio_manager.stop_audio_3d("audio_name") 
+$audio_manager.stop_audio_3d("audio_name")
 ```
 
 ### Bulk Playback Control
 
 You can also control all audio tracks of a specific type or all types at once:
 
-- **Play All Audio**: 
+- **Play All Audio**:
 
   ```cpp
-   # Plays all Omni, 2D, and 3D audio 
-   $audio_manager.play_all() 
-   ```  
-  
+   # Plays all Omni, 2D, and 3D audio
+   $audio_manager.play_all()
+  ```
+
   ```cpp
    # Plays all Omni audio
-   $audio_manager.play_all_omni() 
-   ```   
-  
-  ```cpp
-   # Plays all 2D audio  
-   $audio_manager.play_all_2d() 
-   ``` 
-  
-  ```cpp
-   # Plays all 3D audio  
-   $audio_manager.play_all_3d() 
-   ``` 
+   $audio_manager.play_all_omni()
+  ```
 
-- **Stop All Audio**: 
+  ```cpp
+   # Plays all 2D audio
+   $audio_manager.play_all_2d()
+  ```
+
+  ```cpp
+   # Plays all 3D audio
+   $audio_manager.play_all_3d()
+  ```
+
+- **Stop All Audio**:
 
   ```cpp
    # Stops all Omni, 2D, and 3D audio
-   $audio_manager.stop_all() 
-   ```   
-  
-  ```cpp
-   # Stops all Omni audio  
-   $audio_manager.stop_all_omni() 
-   ``` 
-  
-  ```cpp
-   # Stops all 2D audio  
-   $audio_manager.stop_all_2d() 
-   ``` 
-  
-  ```cpp
-   # Stops all 3D audio 
-   $audio_manager.stop_all_3d() 
-   ```  
- 
-- **Pause All Audio**: 
+   $audio_manager.stop_all()
+  ```
 
   ```cpp
-   # Pauses all Omni, 2D, and 3D audio 
-   $audio_manager.pause_all() 
-   ```  
-  
-  ```cpp
-   # Pauses all Omni audio  
-   $audio_manager.pause_all_omni() 
-   ``` 
-  
-  ```cpp
-   # Pauses all 2D audio  
-   $audio_manager.pause_all_2d() 
-   ``` 
-  
-  ```cpp
-   # Pauses all 3D audio 
-   $audio_manager.pause_all_3d() 
-   ```  
+   # Stops all Omni audio
+   $audio_manager.stop_all_omni()
+  ```
 
-- **Resume All Audio**: 
+  ```cpp
+   # Stops all 2D audio
+   $audio_manager.stop_all_2d()
+  ```
+
+  ```cpp
+   # Stops all 3D audio
+   $audio_manager.stop_all_3d()
+  ```
+
+- **Pause All Audio**:
+
+  ```cpp
+   # Pauses all Omni, 2D, and 3D audio
+   $audio_manager.pause_all()
+  ```
+
+  ```cpp
+   # Pauses all Omni audio
+   $audio_manager.pause_all_omni()
+  ```
+
+  ```cpp
+   # Pauses all 2D audio
+   $audio_manager.pause_all_2d()
+  ```
+
+  ```cpp
+   # Pauses all 3D audio
+   $audio_manager.pause_all_3d()
+  ```
+
+- **Resume All Audio**:
 
   ```cpp
   # Resumes all paused Omni, 2D, and 3D audio
-  $audio_manager.continue_all()   
+  $audio_manager.continue_all()
   ```
+
   ```cpp
-  # Resumes all paused Omni audio  
-  $audio_manager.continue_all_omni() 
+  # Resumes all paused Omni audio
+  $audio_manager.continue_all_omni()
   ```
+
   ```cpp
   # Resumes all paused 2D audio
-  $audio_manager.continue_all_2d() 
-  ``` 
+  $audio_manager.continue_all_2d()
+  ```
+
   ```cpp
-  # Resumes all paused 3D audio  
-  $audio_manager.continue_all_3d() 
-  ``` 
+  # Resumes all paused 3D audio
+  $audio_manager.continue_all_3d()
+  ```
 
 ### Retrieving Audio Resources
 
 You can access audio resources directly to modify their properties at runtime:
-- **Get Audio Resource**: 
+
+- **Get Audio Resource**:
 
   ```v
-  var audio_omni = $audio_manager.get_audio_omni("audio_name") 
-  ```  
+  var audio_omni = $audio_manager.get_audio_omni("audio_name")
+  ```
+
   ```v
-  var audio_2d = $audio_manager.get_audio_2d("audio_name") 
-  ```  
+  var audio_2d = $audio_manager.get_audio_2d("audio_name")
+  ```
+
   ```v
-  var audio_3d = $audio_manager.get_audio_3d("audio_name") 
+  var audio_3d = $audio_manager.get_audio_3d("audio_name")
   ```
 
 ## Configuration
 
 Each audio track can be configured with the following properties:
+
 - **Audio Name**: A unique identifier for the audio track.
 - **Audio Stream**: The audio file to be played.
 - **Start Time**: The time (in seconds) to start playing the audio.
@@ -217,46 +232,55 @@ Each audio track can be configured with the following properties:
 - **Max Distance** (2D and 3D): The maximum distance for audio attenuation.
 - **Max Polyphony**: The maximum number of simultaneous streams.
 - **Panning Strength** (2D and 3D): The intensity of the panning effect.
-- **bus**: (Omni, 2D and 3D)
-- **playback_type**: (Omni, 2D and 3D)
-- **area_mask**: (2D and 3D)
-- **attenuation**: (2D)
-- **emission_angle_enabled**: (3D)
-- **emission_angle_degrees**: (3D)
-- **emission_angle_filter_attenuation_db**: (3D)
-- **attenuation_filter_cutoff_hz**: (3D)
-- **attenuation_filter_db**: (3D)
-- **doppler_tracking**: (3D)
+- **Bus**: (Omni, 2D and 3D)
+- **Playback Type**: (Omni, 2D and 3D)
+- **Area Mask**: (2D and 3D)
+- **Attenuation**: (2D)
+- **Emission Angle Enabled**: (3D)
+- **Emission Angle Degrees**: (3D)
+- **Emission Angle Filter Attenuation db**: (3D)
+- **Attenuation Filter Cutoff hz**: (3D)
+- **Attenuation Filter db**: (3D)
+- **Doppler Tracking**: (3D)
+- **unit_size**: (3D)
+- **loop_offset**: (Omni, 2D and 3D)
+- **mix_target**: (Omni)
 
 These properties can be set directly in the Godot editor via the **Inspector** by selecting an audio entry in the **AudioManager** node.
 
 ### Positional Audio Configuration (2D and 3D)
 
 The `target_parent_audios_2d` and `target_parent_audios_3d` properties define the parent node where 2D and 3D audio players are instantiated, allowing audio to have specific positions in 2D or 3D scenes. This is crucial for effects like distance-based volume attenuation, panning (in 2D), and spatial audio (in 3D):
+
 - **`target_parent_audios_2d`**: Defines the parent node (type `Node2D`) for 2D audio players. Link it to a node with a position in the 2D scene (e.g., a character) to enable positional effects like volume variation and panning based on the listener’s distance and location.
 - **`target_parent_audios_3d`**: Defines the parent node (type `Node3D`) for 3D audio players. Link it to a node with a position in 3D space (e.g., an object or enemy) to enable spatial audio effects like volume attenuation, sound direction, and Doppler, depending on the listener’s relative position.
 
 #### Important: Audio Listener Requirement
+
 For audio to be heard and positional effects to work, **you must** have an audio listener configured in the scene:
+
 - For **2D audio**: Add an `AudioListener2D` node or set a 2D camera as the listener (enable the `current` property).
 - For **3D audio**: Add an `AudioListener3D` node or set a 3D camera as the listener (enable the `current` property).
-**Warning**: Without an audio listener (`AudioListener2D` or `AudioListener3D`) or a properly configured camera, audio will not play correctly, and distance or positional effects will not function.
+  **Warning**: Without an audio listener (`AudioListener2D` or `AudioListener3D`) or a properly configured camera, audio will not play correctly, and distance or positional effects will not function.
 
 ## Examples
 
 ### Example 1: Playing Background Music (Omni Audio)
+
 1. Add an **AudioManager** node to your scene.
 2. In the **Inspector**, under **Omni**, add a new audio entry.
 3. Set **Audio Name** to `"background_music"`.
 4. Assign an audio file to **Audio Stream**.
 5. Set **Auto-Play** to `true` to start playback when the scene loads.
 
-Alternatively, play it programmatically: 
-```v 
-$audio_manager.play_audio_omni("background_music") 
+Alternatively, play it programmatically:
+
+```v
+$audio_manager.play_audio_omni("background_music")
 ```
 
 ### Example 2: Playing a 3D Sound Effect
+
 1. Add an **AudioManager** node to your scene.
 2. Set **Target Parent Audios 3D** to the audio source node (e.g., a character or object).
 3. In the **Inspector**, under **3D**, add a new audio entry.
@@ -264,12 +288,14 @@ $audio_manager.play_audio_omni("background_music")
 5. Assign an audio file to **Audio Stream**.
 6. Configure **Max Distance** to control how far the sound can be heard.
 
-Play the sound when needed: 
-```v 
-$audio_manager.play_audio_3d("explosion") 
+Play the sound when needed:
+
+```v
+$audio_manager.play_audio_3d("explosion")
 ```
 
 ### Example 3: Looping a Trimmed Audio Clip
+
 1. Add an **AudioManager** node to your scene.
 2. In the **Inspector**, under **Omni**, add a new audio entry.
 3. Set **Audio Name** to `"looped_clip"`.

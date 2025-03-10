@@ -112,7 +112,7 @@ var duration: float = 0.0:
 		
 
 ## Set Max Distance
-@export_range(0.1, 4096.0, 1.0, "or_greater", "suffix:m") var max_distance: float = 100.0:
+@export_range(0.1, 4096.0, 1.0, "or_greater", "suffix:m") var max_distance: float = 2000.0:
 	set(value):
 		max_distance = value
 		_warning_start_time_with_end_time()
