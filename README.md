@@ -18,6 +18,10 @@
 
 The **AudioManager** centralizes audio management in Godot, allowing you to define and control multiple audio tracks (Omni, 2D, and 3D) within a single node. It uses custom resource types (`AudioMangerOmni`, `AudioManger2D`, `AudioManger3D`) to configure each track’s properties, such as trimming, looping, and playback settings. The plugin internally handles the creation and control of audio players and timers, providing a simple API for programmatic playback control.
 
+The AudioManager node has a parent property (`target_parent_audios`) for 2D and 3D audio, and if this property is not set, the 2D and 3D audio are inserted into the parent node from where the AudioManager was inserted. This enables features such as audio attenuation and other positional effects based on the position of the AudioManager's parent node.
+
+In addition to 2D and 3D audio, you have the `omni` option which behaves like Godot's native **AudioStreamPlayer** node.
+
 ## Installation
 
 1. Download the plugin files.
