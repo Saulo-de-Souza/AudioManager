@@ -442,7 +442,7 @@ func _init_audios_omni() -> void:
 		add_child(new_audio_manager_controller_omni)
 
 		if audio_omni.duration > 0 and audio_omni.auto_play:
-			play_audio_omni(audio_omni.audio_name)
+			play_audio_omni.call_deferred(audio_omni.audio_name)
 	pass
 
 
@@ -461,12 +461,15 @@ func _init_audios_2d() -> void:
 		audios_manager_controller_2d[audio_2d.audio_name] = new_audio_manager_controller_2d
 		
 		if is_instance_valid(target_parent_audios_2d):
-			target_parent_audios_2d.add_child(new_audio_manager_controller_2d)
+			target_parent_audios_2d.add_child.call_deferred(new_audio_manager_controller_2d)
 		else:
-			push_error("target_parent_audios_2d is null")
-
+			if get_parent():
+				get_parent().call_deferred("add_child", new_audio_manager_controller_2d)
+			else:
+				add_child(new_audio_manager_controller_2d)
+		
 		if audio_2d.duration > 0 and audio_2d.auto_play:
-			play_audio_2d(audio_2d.audio_name)
+			call_deferred("play_audio_2d", audio_2d.audio_name)
 	pass
 	
 	
@@ -486,12 +489,15 @@ func _init_audios_3d() -> void:
 		audios_manager_controller_3d[audio_3d.audio_name] = new_audio_manager_controller_3d
 		
 		if is_instance_valid(target_parent_audios_3d):
-			target_parent_audios_3d.add_child(new_audio_manager_controller_3d)
+			target_parent_audios_3d.add_child.call_deferred(new_audio_manager_controller_3d)
 		else:
-			push_error("target_parent_audios_3d is null")
+			if get_parent():
+				get_parent().add_child.call_deferred(new_audio_manager_controller_3d)
+			else:
+				add_child(new_audio_manager_controller_3d)
 
 		if audio_3d.duration > 0 and audio_3d.auto_play:
-			play_audio_3d(audio_3d.audio_name)
+			play_audio_3d.call_deferred(audio_3d.audio_name)
 	pass
 	
 	
