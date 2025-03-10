@@ -10,6 +10,7 @@ var _waring_starttime_endtime: int = 0
 var _can_warning_starttime_endtime: bool = false
 
 var _owner: Variant = null
+var _previous_duration = 0.0
 
 ## Audio duration
 var duration: float = 0.0:
@@ -47,6 +48,7 @@ var duration: float = 0.0:
 		if is_instance_valid(_owner):
 			_owner.use_clipper = value
 			_owner.duration = duration
+			_redefine_timeout()
 
 
 ## Start time of audio in seconds when use_clipper is true. 
@@ -60,6 +62,7 @@ var duration: float = 0.0:
 		if is_instance_valid(_owner):
 			_owner.start_time = value
 			_owner.duration = duration
+			_redefine_timeout()
 		
 		
 ## End time of audio in seconds when use_clipper is true. 
@@ -72,6 +75,7 @@ var duration: float = 0.0:
 		_define_duration()
 		if is_instance_valid(_owner):
 			_owner.duration = duration
+			_redefine_timeout()
 		
 
 ## Set Volume Db
@@ -94,6 +98,7 @@ var duration: float = 0.0:
 		if is_instance_valid(_owner):
 			_owner.pitch_scale = value
 			_owner.duration = duration
+			_redefine_timeout()
 		
 
 ## Set Unit Size
@@ -116,6 +121,7 @@ var duration: float = 0.0:
 		if is_instance_valid(_owner):
 			_owner.loop = value
 			_owner.duration = duration
+			_redefine_timeout()
 		
 		
 ## Audio rewinds in seconds when looping.
@@ -128,6 +134,7 @@ var duration: float = 0.0:
 		_define_duration()
 		if is_instance_valid(_owner):
 			_owner.duration = duration
+			_redefine_timeout()
 		
 		
 ## Play the audio as soon as you enter the scene.
@@ -156,6 +163,7 @@ func _increment_loop_offset() -> float:
 
 
 func _define_duration() -> void:
+	_previous_duration = duration
 	if use_clipper:
 		if audio_stream:
 			duration = min(max(((end_time - start_time) - _increment_loop_offset()) / pitch_scale, 0.0), audio_stream.get_length())
@@ -206,3 +214,34 @@ func _warning_duration_zero() -> void:
 	
 func get_audio_stream_player() -> AudioStreamPlayer:
 		return _owner as AudioStreamPlayer
+
+
+func _redefine_timeout() -> void:
+	# Se o Timer está rodando, ajusta dinamicamente
+	if not _owner.timer.is_stopped():
+		# Calcula o tempo já passado
+		var elapsed_time = _previous_duration - _owner.timer.time_left
+		var progress = elapsed_time / _previous_duration if _previous_duration > 0 else 0.0
+		var new_remaining_time = duration * (1.0 - progress)
+		
+		# Para o Timer
+		_owner.timer.stop()
+		
+		# Desconecta todos os sinais timeout existentes
+		var cb_timeout
+		for connection in _owner.timer.get_signal_connection_list("timeout"):
+			cb_timeout = connection.callable
+			_owner.timer.disconnect("timeout", connection.callable)
+		
+		# Atualiza o wait_time
+		_owner.timer.wait_time = max(new_remaining_time, 0.0001)
+		
+		# Reconecta o timeout com o comportamento correto
+		_owner.timer.timeout.connect(cb_timeout)
+		
+		# Inicia o Timer novamente
+		_owner.timer.start()
+	#else:
+		# Se o Timer não está rodando, apenas atualiza o wait_time
+		#_owner.timer.wait_time = max(duration, 0.0001)
+	pass
