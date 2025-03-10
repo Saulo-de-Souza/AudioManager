@@ -247,31 +247,16 @@ func get_audio_stream_player3d() -> AudioStreamPlayer3D:
 
 
 func _redefine_timeout() -> void:
-	# Se o Timer está rodando, ajusta dinamicamente
 	if not _owner.timer.is_stopped():
-		# Calcula o tempo já passado
 		var elapsed_time = _previous_duration - _owner.timer.time_left
 		var progress = elapsed_time / _previous_duration if _previous_duration > 0 else 0.0
 		var new_remaining_time = duration * (1.0 - progress)
-		
-		# Para o Timer
 		_owner.timer.stop()
-		
-		# Desconecta todos os sinais timeout existentes
 		var cb_timeout
 		for connection in _owner.timer.get_signal_connection_list("timeout"):
 			cb_timeout = connection.callable
 			_owner.timer.disconnect("timeout", connection.callable)
-		
-		# Atualiza o wait_time
 		_owner.timer.wait_time = max(new_remaining_time, 0.0001)
-		
-		# Reconecta o timeout com o comportamento correto
 		_owner.timer.timeout.connect(cb_timeout)
-		
-		# Inicia o Timer novamente
 		_owner.timer.start()
-	#else:
-		# Se o Timer não está rodando, apenas atualiza o wait_time
-		#_owner.timer.wait_time = max(duration, 0.0001)
 	pass
