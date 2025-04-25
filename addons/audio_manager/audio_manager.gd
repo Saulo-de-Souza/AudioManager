@@ -507,6 +507,7 @@ func _setup_audio_properties_omni(audio: AudioStreamPlayer, a: AudioMangerOmni) 
 	audio.pitch_scale = a.pitch_scale
 	audio.mix_target = a.mix_target
 	audio.max_polyphony = a.max_polyphony
+	audio.bus = a.bus
 	pass
 	
 
@@ -517,6 +518,7 @@ func _setup_audio_properties_2d(audio: AudioStreamPlayer2D, a: AudioManger2D) ->
 	audio.max_distance = a.max_distance
 	audio.max_polyphony = a.max_polyphony
 	audio.panning_strength = a.panning_strength
+	audio.bus = a.bus
 	pass
 
 
@@ -529,6 +531,7 @@ func _setup_audio_properties_3d(audio: AudioStreamPlayer3D, a: AudioManger3D) ->
 	audio.unit_size = a.unit_size
 	audio.max_polyphony = a.max_polyphony
 	audio.panning_strength = a.panning_strength
+	audio.bus = a.bus
 	pass
 	
 
