@@ -17,6 +17,7 @@ var duration: float = 0.0:
 	set(value):
 		duration = value
 		
+var is_randomizer: bool = false
 
 ## Name of the audio to be called in the code
 @export var audio_name: String = "":
@@ -30,6 +31,13 @@ var duration: float = 0.0:
 @export var audio_stream: AudioStream = null:
 	set(value):
 		audio_stream = value
+		is_randomizer = value is AudioStreamRandomizer
+		if Engine.is_editor_hint() and is_randomizer:
+			loop = false
+			use_clipper = false
+			start_time = 0.0
+			end_time = 0.0
+			loop_offset = 0.0
 		_warning_start_time_with_end_time()
 		_warning_property_null(audio_stream, "STREAM")
 		if is_instance_valid(_owner):
@@ -41,6 +49,12 @@ var duration: float = 0.0:
 ## if true, you have to configure the start_time and and_time and the subtraction of end_time by start_time together with the loop_offset cannot be less than zero.
 @export var use_clipper: bool = false:
 	set(value):
+		if Engine.is_editor_hint() and is_randomizer:
+			use_clipper = false
+			start_time = 0.0
+			end_time = 0.0
+			push_warning("AudioStream of type Randomizer cannot be trimmed.")
+			return
 		use_clipper = value
 		_warning_start_time_with_end_time()
 		_warning_property_null(use_clipper, "USE_CLIPPER")
@@ -55,6 +69,10 @@ var duration: float = 0.0:
 ## Remember: the value of end_time minus the value of start_time minus the value of loop_offset cannot be less than zero.
 @export_range(0.0, 300.0, 0.01, "or_greater", "suffix:sec") var start_time: float = 0.0:
 	set(value):
+		if Engine.is_editor_hint() and is_randomizer:
+			start_time = 0.0
+			push_warning("AudioStream of type Randomizer cannot be trimmed.")
+			return
 		start_time = value
 		_warning_start_time_with_end_time()
 		_warning_property_null(start_time, "START_TIME")
@@ -69,6 +87,10 @@ var duration: float = 0.0:
 ## Remember: the value of end_time minus the value of start_time minus the value of loop_offset cannot be less than zero.
 @export_range(0.0, 300.0, 0.01, "or_greater", "suffix:sec") var end_time: float = 0.0:
 	set(value):
+		if Engine.is_editor_hint() and is_randomizer:
+			end_time = 0.0
+			push_warning("AudioStream of type Randomizer cannot be trimmed.")
+			return
 		end_time = value
 		_warning_start_time_with_end_time()
 		_warning_property_null(end_time, "END_TIME")
@@ -134,6 +156,10 @@ var duration: float = 0.0:
 ## Set Loop
 @export var loop: bool = false:
 	set(value):
+		if Engine.is_editor_hint() and is_randomizer:
+			loop = false
+			push_warning("AudioStream of type Randomizer cannot loop.")
+			return
 		loop = value
 		_warning_start_time_with_end_time()
 		_warning_property_null(loop, "LOOP")
@@ -148,6 +174,10 @@ var duration: float = 0.0:
 ## Remember: the value of end_time minus the value of start_time minus the value of loop_offset cannot be less than zero.
 @export_range(0.0, 1.0, 0.0001, "or_greater", "suffix:sec") var loop_offset: float = 0.0:
 	set(value):
+		if Engine.is_editor_hint() and is_randomizer:
+			push_warning("AudioStream of the Randomizer type cannot have a loop and therefore does not have a loopoffset.")
+			loop_offset = 0.0
+			return
 		loop_offset = value
 		_warning_start_time_with_end_time()
 		_warning_property_null(loop_offset, "LOOP_OFFSET")
