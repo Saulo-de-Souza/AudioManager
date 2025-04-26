@@ -22,6 +22,8 @@ The AudioManager node has a parent property (`target_parent_audios`) for 2D and 
 
 In addition to 2D and 3D audio, you have the `omni` option which behaves like Godot's native **AudioStreamPlayer** node.
 
+Note: You cannot configure clipper and loop for AudioStreamRandomizer.
+
 ## Installation
 
 1. Download the plugin files.
