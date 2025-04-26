@@ -6,6 +6,8 @@ class_name AudioManger3D extends Resource
 var _warning_duration: int = 0
 var _can_warning_duration: bool = false
 
+var _warning_randomizer_count: int = 0
+
 var _waring_starttime_endtime: int = 0
 var _can_warning_starttime_endtime: bool = false
 
@@ -32,12 +34,12 @@ var is_randomizer: bool = false
 	set(value):
 		audio_stream = value
 		is_randomizer = value is AudioStreamRandomizer
-		if Engine.is_editor_hint() and is_randomizer:
-			loop = false
-			use_clipper = false
-			start_time = 0.0
-			end_time = 0.0
-			loop_offset = 0.0
+		if is_randomizer:
+			if loop: loop = false
+			if use_clipper: use_clipper = false
+			if start_time != 0.0: start_time = 0.0
+			if end_time != 0.0: end_time = 0.0
+			if loop_offset != 0.0: loop_offset = 0.0
 		_warning_start_time_with_end_time()
 		_warning_property_null(audio_stream, "STREAM")
 		if is_instance_valid(_owner):
@@ -49,11 +51,8 @@ var is_randomizer: bool = false
 ## if true, you have to configure the start_time and and_time and the subtraction of end_time by start_time together with the loop_offset cannot be less than zero.
 @export var use_clipper: bool = false:
 	set(value):
-		if Engine.is_editor_hint() and is_randomizer:
-			use_clipper = false
-			start_time = 0.0
-			end_time = 0.0
-			push_warning("AudioStream of type Randomizer cannot be trimmed.")
+		if is_randomizer:
+			_warning_randomizer("AudioStream of type Randomizer cannot be trimmed.")
 			return
 		use_clipper = value
 		_warning_start_time_with_end_time()
@@ -63,15 +62,14 @@ var is_randomizer: bool = false
 			_owner.use_clipper = value
 			_owner.duration = duration
 			_redefine_timeout()
-
+   
 
 ## Start time of audio in seconds when use_clipper is true. 
 ## Remember: the value of end_time minus the value of start_time minus the value of loop_offset cannot be less than zero.
 @export_range(0.0, 300.0, 0.01, "or_greater", "suffix:sec") var start_time: float = 0.0:
 	set(value):
-		if Engine.is_editor_hint() and is_randomizer:
-			start_time = 0.0
-			push_warning("AudioStream of type Randomizer cannot be trimmed.")
+		if is_randomizer:
+			_warning_randomizer("AudioStream of type Randomizer cannot be trimmed.")
 			return
 		start_time = value
 		_warning_start_time_with_end_time()
@@ -87,9 +85,8 @@ var is_randomizer: bool = false
 ## Remember: the value of end_time minus the value of start_time minus the value of loop_offset cannot be less than zero.
 @export_range(0.0, 300.0, 0.01, "or_greater", "suffix:sec") var end_time: float = 0.0:
 	set(value):
-		if Engine.is_editor_hint() and is_randomizer:
-			end_time = 0.0
-			push_warning("AudioStream of type Randomizer cannot be trimmed.")
+		if is_randomizer:
+			_warning_randomizer("AudioStream of type Randomizer cannot be trimmed.")
 			return
 		end_time = value
 		_warning_start_time_with_end_time()
@@ -156,9 +153,8 @@ var is_randomizer: bool = false
 ## Set Loop
 @export var loop: bool = false:
 	set(value):
-		if Engine.is_editor_hint() and is_randomizer:
-			loop = false
-			push_warning("AudioStream of type Randomizer cannot loop.")
+		if is_randomizer:
+			_warning_randomizer("AudioStream of type Randomizer cannot loop.")
 			return
 		loop = value
 		_warning_start_time_with_end_time()
@@ -174,9 +170,8 @@ var is_randomizer: bool = false
 ## Remember: the value of end_time minus the value of start_time minus the value of loop_offset cannot be less than zero.
 @export_range(0.0, 1.0, 0.0001, "or_greater", "suffix:sec") var loop_offset: float = 0.0:
 	set(value):
-		if Engine.is_editor_hint() and is_randomizer:
-			push_warning("AudioStream of the Randomizer type cannot have a loop and therefore does not have a loopoffset.")
-			loop_offset = 0.0
+		if is_randomizer:
+			_warning_randomizer("AudioStream of the Randomizer type cannot have a loop and therefore does not have a loopoffset.")
 			return
 		loop_offset = value
 		_warning_start_time_with_end_time()
@@ -332,9 +327,17 @@ func _warning_duration_zero() -> void:
 	else:
 		_warning_duration += 1
 		
-	if _can_warning_duration and Engine.is_editor_hint() and audio_stream and duration <= 0:
+	if not is_randomizer and _can_warning_duration and Engine.is_editor_hint() and audio_stream and duration <= 0:
 		push_warning("The audio duration cannot be less than or equal to zero. Check the properties: START_TIME, END_TIME and LOOP_OFFSET.")
 
+	pass
+
+
+func _warning_randomizer(value: String) -> void:
+	if _warning_randomizer_count > 5:
+		push_warning(value)
+	else:
+		_warning_randomizer_count += 1
 	pass
 
 
