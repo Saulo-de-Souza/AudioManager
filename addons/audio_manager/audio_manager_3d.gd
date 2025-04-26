@@ -20,6 +20,9 @@ var duration: float = 0.0:
 		duration = value
 		
 var is_randomizer: bool = false
+var is_interactive: bool = false
+var is_synchronized: bool = false
+var is_playlist: bool = false
 
 ## Name of the audio to be called in the code
 @export var audio_name: String = "":
@@ -34,7 +37,11 @@ var is_randomizer: bool = false
 	set(value):
 		audio_stream = value
 		is_randomizer = value is AudioStreamRandomizer
-		if is_randomizer:
+		is_interactive = value is AudioStreamInteractive
+		is_synchronized = value is AudioStreamSynchronized
+		is_playlist = value is AudioStreamPlaylist
+
+		if is_randomizer or is_interactive or is_playlist:
 			if loop: loop = false
 			if use_clipper: use_clipper = false
 			if start_time != 0.0: start_time = 0.0
@@ -51,8 +58,8 @@ var is_randomizer: bool = false
 ## if true, you have to configure the start_time and and_time and the subtraction of end_time by start_time together with the loop_offset cannot be less than zero.
 @export var use_clipper: bool = false:
 	set(value):
-		if is_randomizer:
-			_warning_randomizer("AudioStream of type Randomizer cannot be trimmed.")
+		if is_randomizer or is_interactive or is_playlist:
+			_warning_randomizer("AudioStream of type Randomizer, Playlist or Interactive cannot be trimmed.")
 			return
 		use_clipper = value
 		_warning_start_time_with_end_time()
@@ -68,8 +75,8 @@ var is_randomizer: bool = false
 ## Remember: the value of end_time minus the value of start_time minus the value of loop_offset cannot be less than zero.
 @export_range(0.0, 300.0, 0.01, "or_greater", "suffix:sec") var start_time: float = 0.0:
 	set(value):
-		if is_randomizer:
-			_warning_randomizer("AudioStream of type Randomizer cannot be trimmed.")
+		if is_randomizer or is_interactive or is_playlist:
+			_warning_randomizer("AudioStream of type Randomizer, Playlist or Interactive cannot be trimmed.")
 			return
 		start_time = value
 		_warning_start_time_with_end_time()
@@ -85,8 +92,8 @@ var is_randomizer: bool = false
 ## Remember: the value of end_time minus the value of start_time minus the value of loop_offset cannot be less than zero.
 @export_range(0.0, 300.0, 0.01, "or_greater", "suffix:sec") var end_time: float = 0.0:
 	set(value):
-		if is_randomizer:
-			_warning_randomizer("AudioStream of type Randomizer cannot be trimmed.")
+		if is_randomizer or is_interactive or is_playlist:
+			_warning_randomizer("AudioStream of type Randomizer, Playlist or Interactive cannot be trimmed.")
 			return
 		end_time = value
 		_warning_start_time_with_end_time()
@@ -153,8 +160,8 @@ var is_randomizer: bool = false
 ## Set Loop
 @export var loop: bool = false:
 	set(value):
-		if is_randomizer:
-			_warning_randomizer("AudioStream of type Randomizer cannot loop.")
+		if is_randomizer or is_interactive or is_playlist:
+			_warning_randomizer("AudioStream of type Randomizer, Playlist or Interactive cannot loop.")
 			return
 		loop = value
 		_warning_start_time_with_end_time()
@@ -170,8 +177,8 @@ var is_randomizer: bool = false
 ## Remember: the value of end_time minus the value of start_time minus the value of loop_offset cannot be less than zero.
 @export_range(0.0, 1.0, 0.0001, "or_greater", "suffix:sec") var loop_offset: float = 0.0:
 	set(value):
-		if is_randomizer:
-			_warning_randomizer("AudioStream of the Randomizer type cannot have a loop and therefore does not have a loopoffset.")
+		if is_randomizer or is_interactive or is_playlist:
+			_warning_randomizer("AudioStream of the Randomizer, Playlist or Interactive type cannot have a loop and therefore does not have a loopoffset.")
 			return
 		loop_offset = value
 		_warning_start_time_with_end_time()

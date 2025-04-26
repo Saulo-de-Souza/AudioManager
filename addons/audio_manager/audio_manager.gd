@@ -61,6 +61,10 @@ func play_audio_omni(audio_name: String) -> void:
 	if audio.is_randomizer:
 		audio.call_deferred("play")
 		return
+	
+	if audio.is_interactive:
+		audio.call_deferred("play")
+		return
 
 	if float(audio.duration) <= 0.0:
 		return
@@ -86,6 +90,10 @@ func play_audio_2d(audio_name: String) -> void:
 		audio.call_deferred("play")
 		return
 		
+	if audio.is_interactive:
+		audio.call_deferred("play")
+		return
+
 	if float(audio.duration) <= 0.0:
 		return
 
@@ -107,6 +115,10 @@ func play_audio_3d(audio_name: String) -> void:
 		return
 
 	if audio.is_randomizer:
+		audio.call_deferred("play")
+		return
+	
+	if audio.is_interactive:
 		audio.call_deferred("play")
 		return
 		
@@ -436,9 +448,11 @@ func _init_audios_omni() -> void:
 		_warning_audio(audio_omni)
 
 		var is_randomizer: bool = audio_omni.audio_stream is AudioStreamRandomizer
+		var is_interactive: bool = audio_omni.audio_stream is AudioStreamInteractive
+		var is_playlist: bool = audio_omni.audio_stream is AudioStreamPlaylist
 
 		var new_audio_manager_controller_omni: AudioManagerControllerOmni = AudioManagerControllerOmni.new(
-			audio_omni.start_time, audio_omni.duration, audio_omni.use_clipper, audio_omni.loop, 0.0, false, is_randomizer
+			audio_omni.start_time, audio_omni.duration, audio_omni.use_clipper, audio_omni.loop, 0.0, false, is_randomizer, is_interactive, is_playlist
 			)
 		
 		audio_omni._owner = new_audio_manager_controller_omni
@@ -447,6 +461,10 @@ func _init_audios_omni() -> void:
 		add_child(new_audio_manager_controller_omni)
 
 		if new_audio_manager_controller_omni.is_randomizer and audio_omni.auto_play:
+			new_audio_manager_controller_omni.call_deferred("play")
+			return
+
+		if new_audio_manager_controller_omni.is_interactive and audio_omni.auto_play:
 			new_audio_manager_controller_omni.call_deferred("play")
 			return
 
@@ -462,9 +480,11 @@ func _init_audios_2d() -> void:
 		_warning_audio(audio_2d)
 		
 		var is_randomizer: bool = audio_2d.audio_stream is AudioStreamRandomizer
+		var is_interactive: bool = audio_2d.audio_stream is AudioStreamInteractive
+		var is_playlist: bool = audio_2d.audio_stream is AudioStreamPlaylist
 		
 		var new_audio_manager_controller_2d: AudioManagerController2D = AudioManagerController2D.new(
-			audio_2d.start_time, audio_2d.duration, audio_2d.use_clipper, audio_2d.loop, 0.0, false, is_randomizer
+			audio_2d.start_time, audio_2d.duration, audio_2d.use_clipper, audio_2d.loop, 0.0, false, is_randomizer, is_interactive, is_playlist
 			)
 		
 		audio_2d._owner = new_audio_manager_controller_2d
@@ -483,6 +503,10 @@ func _init_audios_2d() -> void:
 			new_audio_manager_controller_2d.call_deferred("play")
 			return
 
+		if new_audio_manager_controller_2d.is_interactive and audio_2d.auto_play:
+			new_audio_manager_controller_2d.call_deferred("play")
+			return
+
 		if audio_2d.duration > 0 and audio_2d.auto_play:
 			call_deferred("play_audio_2d", audio_2d.audio_name)
 	pass
@@ -495,9 +519,11 @@ func _init_audios_3d() -> void:
 		_warning_audio(audio_3d)
 
 		var is_randomizer: bool = audio_3d.audio_stream is AudioStreamRandomizer
+		var is_interactive: bool = audio_3d.audio_stream is AudioStreamInteractive
+		var is_playlist: bool = audio_3d.audio_stream is AudioStreamPlaylist
 
 		var new_audio_manager_controller_3d: AudioManagerController3D = AudioManagerController3D.new(
-			audio_3d.start_time, audio_3d.duration, audio_3d.use_clipper, audio_3d.loop, 0.0, false, is_randomizer
+			audio_3d.start_time, audio_3d.duration, audio_3d.use_clipper, audio_3d.loop, 0.0, false, is_randomizer, is_interactive, is_playlist
 			)
 		
 		audio_3d._owner = new_audio_manager_controller_3d
@@ -516,6 +542,11 @@ func _init_audios_3d() -> void:
 		if new_audio_manager_controller_3d.is_randomizer and audio_3d.auto_play:
 			new_audio_manager_controller_3d.call_deferred("play")
 			return
+
+		if new_audio_manager_controller_3d.is_interactive and audio_3d.auto_play:
+			new_audio_manager_controller_3d.call_deferred("play")
+			return
+			
 
 		if audio_3d.duration > 0 and audio_3d.auto_play:
 			play_audio_3d.call_deferred(audio_3d.audio_name)
@@ -611,7 +642,7 @@ func _on_timer_timeout_omni(_audio: AudioManagerControllerOmni, _audio_name: Str
 	if _audio.loop:
 		cb.call()
 	else:
-		_audio.stop()
+		if not _audio.is_playlist: _audio.stop()
 	pass
 
 
@@ -619,7 +650,7 @@ func _on_timer_timeout_2d(_audio: AudioManagerController2D, _audio_name: String,
 	if _audio.loop:
 		cb.call()
 	else:
-		_audio.stop()
+		if not _audio.is_playlist: _audio.stop()
 	pass
 	
 	
@@ -627,7 +658,7 @@ func _on_timer_timeout_3d(_audio: AudioManagerController3D, _audio_name: String,
 	if _audio.loop:
 		cb.call()
 	else:
-		_audio.stop()
+		if not _audio.is_playlist: _audio.stop()
 	pass
 
 
@@ -646,9 +677,9 @@ func _get_audio_controller_3d(_audio_name: String) -> AudioManagerController3D:
 func _warning_audio(_audio: Variant) -> void:
 	if not _audio.audio_stream:
 		push_warning("The STREAM property cannot be null. (%s)" % _audio.audio_name)
-	if _audio.duration <= 0.0 and not _audio.is_randomizer:
+	if _audio.duration <= 0.0 and not (_audio.is_randomizer or _audio.is_interactive or _audio.is_synchronized or _audio.is_playlist):
 		push_warning("AudioManger duration cannot be less than or equal to zero. Check START_TIME, END_TIME. (%s)" % _audio.audio_name)
-	if _audio.use_clipper and not _audio.is_randomizer and _audio.start_time > _audio.end_time:
+	if _audio.use_clipper and not (_audio.is_randomizer or _audio.is_interactive or _audio.is_synchronized or _audio.is_playlist) and _audio.start_time > _audio.end_time:
 		push_warning("Start time cannot be greater than end time in AudioManger resource: (%s)" % _audio.audio_name)
 	pass
 	
@@ -657,7 +688,7 @@ func _check_audio(_audio: Variant) -> bool:
 	if not _audio or not _audio.audio_stream:
 		push_warning("AudioManger resource or its stream is not properly defined.")
 		return false
-	if not _audio.is_randomizer and _audio.start_time > _audio.end_time:
+	if not (_audio.is_randomizer or _audio.is_interactive or _audio.is_synchronized or _audio.is_playlist) and _audio.start_time > _audio.end_time:
 		push_warning("AudioManger start time cannot be greater than end time for '%s'. AudioMangerResource deleted from ManagerList." % _audio.audio_name)
 		return false
 	return true
@@ -678,8 +709,10 @@ class AudioManagerControllerOmni extends AudioStreamPlayer:
 	var time_remain: float
 	var is_timer_connected: bool
 	var is_randomizer: bool
+	var is_interactive: bool
+	var is_playlist: bool
 	
-	func _init(_start_time: float, _duration: float, _use_clipper: bool, _loop: bool, _time_remain: float, _is_timer_connected: bool, _is_randomizer: bool = false) -> void:
+	func _init(_start_time: float, _duration: float, _use_clipper: bool, _loop: bool, _time_remain: float, _is_timer_connected: bool, _is_randomizer: bool = false, _is_interactive: bool = false, _is_playlist: bool = false) -> void:
 		timer = Timer.new()
 		timer.name = "timer"
 		add_child(timer)
@@ -691,6 +724,8 @@ class AudioManagerControllerOmni extends AudioStreamPlayer:
 		self.time_remain = _time_remain
 		self.is_timer_connected = _is_timer_connected
 		is_randomizer = _is_randomizer
+		is_interactive = _is_interactive
+		is_playlist = _is_playlist
 		pass
 		
 		
@@ -709,8 +744,10 @@ class AudioManagerController2D extends AudioStreamPlayer2D:
 	var time_remain: float
 	var is_timer_connected: bool
 	var is_randomizer: bool
+	var is_interactive: bool
+	var is_playlist: bool
 
-	func _init(_start_time: float, _duration: float, _use_clipper: bool, _loop: bool, _time_remain: float, _is_timer_connected: bool, _is_randomizer: bool = false) -> void:
+	func _init(_start_time: float, _duration: float, _use_clipper: bool, _loop: bool, _time_remain: float, _is_timer_connected: bool, _is_randomizer: bool = false, _is_interactive: bool = false, _is_playlist: bool = false) -> void:
 		timer = Timer.new()
 		timer.name = "timer"
 		add_child(timer)
@@ -722,6 +759,8 @@ class AudioManagerController2D extends AudioStreamPlayer2D:
 		self.time_remain = _time_remain
 		self.is_timer_connected = _is_timer_connected
 		self.is_randomizer = _is_randomizer
+		is_interactive = _is_interactive
+		is_playlist = _is_playlist
 		pass
 		
 
@@ -740,9 +779,11 @@ class AudioManagerController3D extends AudioStreamPlayer3D:
 	var time_remain: float
 	var is_timer_connected: bool
 	var is_randomizer: bool
+	var is_interactive: bool
+	var is_playlist: bool
 	pass
 
-	func _init(_start_time: float, _duration: float, _use_clipper: bool, _loop: bool, _time_remain: float, _is_timer_connected: bool, _is_randomizer: bool = false) -> void:
+	func _init(_start_time: float, _duration: float, _use_clipper: bool, _loop: bool, _time_remain: float, _is_timer_connected: bool, _is_randomizer: bool = false, _is_interactive: bool = false, _is_playlist: bool = false) -> void:
 		timer = Timer.new()
 		timer.name = "timer"
 		add_child(timer)
@@ -754,4 +795,6 @@ class AudioManagerController3D extends AudioStreamPlayer3D:
 		self.time_remain = _time_remain
 		self.is_timer_connected = _is_timer_connected
 		is_randomizer = _is_randomizer
+		is_interactive = _is_interactive
+		is_playlist = _is_playlist
 		pass
