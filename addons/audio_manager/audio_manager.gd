@@ -65,6 +65,10 @@ func play_audio_omni(audio_name: String) -> void:
 	if audio.is_interactive:
 		audio.call_deferred("play")
 		return
+	
+	if audio.is_playlist:
+		audio.call_deferred("play")
+		return
 
 	if float(audio.duration) <= 0.0:
 		return
@@ -91,6 +95,10 @@ func play_audio_2d(audio_name: String) -> void:
 		return
 		
 	if audio.is_interactive:
+		audio.call_deferred("play")
+		return
+
+	if audio.is_playlist:
 		audio.call_deferred("play")
 		return
 
@@ -121,6 +129,10 @@ func play_audio_3d(audio_name: String) -> void:
 	if audio.is_interactive:
 		audio.call_deferred("play")
 		return
+
+	if audio.is_playlist:
+		audio.call_deferred("play")
+		return
 		
 	if float(audio.duration) <= 0.0:
 		return
@@ -144,6 +156,10 @@ func pause_audio_omni(audio_name: String) -> void:
 		
 	if not audio.is_inside_tree():
 		return
+
+	if audio.is_randomizer or audio.is_interactive or audio.is_playlist:
+		audio.stream_paused = true
+		return
 	
 	var timer: Timer = _setup_timer_omni(audio_name)
 	audio.stream_paused = true
@@ -159,6 +175,10 @@ func pause_audio_2d(audio_name: String) -> void:
 		return
 		
 	if not audio.is_inside_tree():
+		return
+
+	if audio.is_randomizer or audio.is_interactive or audio.is_playlist:
+		audio.stream_paused = true
 		return
 	
 	var timer: Timer = _setup_timer_2d(audio_name)
@@ -176,6 +196,10 @@ func pause_audio_3d(audio_name: String) -> void:
 		
 	if not audio.is_inside_tree():
 		return
+
+	if audio.is_randomizer or audio.is_interactive or audio.is_playlist:
+		audio.stream_paused = true
+		return
 	
 	var timer: Timer = _setup_timer_3d(audio_name)
 	audio.stream_paused = true
@@ -192,6 +216,10 @@ func continue_audio_omni(audio_name: String) -> void:
 		
 	if not audio.is_inside_tree():
 		return
+
+	if audio.is_randomizer or audio.is_interactive or audio.is_playlist:
+		audio.stream_paused = false
+		return
 	
 	var timer: Timer = _setup_timer_omni(audio_name)
 	audio.stream_paused = false
@@ -206,6 +234,10 @@ func continue_audio_2d(audio_name: String) -> void:
 		return
 		
 	if not audio.is_inside_tree():
+		return
+
+	if audio.is_randomizer or audio.is_interactive or audio.is_playlist:
+		audio.stream_paused = false
 		return
 	
 	var timer: Timer = _setup_timer_2d(audio_name)
@@ -222,6 +254,10 @@ func continue_audio_3d(audio_name: String) -> void:
 		
 	if not audio.is_inside_tree():
 		return
+
+	if audio.is_randomizer or audio.is_interactive or audio.is_playlist:
+		audio.stream_paused = false
+		return
 	
 	var timer: Timer = _setup_timer_3d(audio_name)
 	audio.stream_paused = false
@@ -236,6 +272,10 @@ func stop_audio_omni(audio_name: String) -> void:
 		return
 		
 	if not audio.is_inside_tree():
+		return
+
+	if audio.is_randomizer or audio.is_interactive or audio.is_playlist:
+		audio.call_deferred("stop")
 		return
 	
 	var timer: Timer = _setup_timer_omni(audio_name)
@@ -253,6 +293,10 @@ func stop_audio_2d(audio_name: String) -> void:
 		
 	if not audio.is_inside_tree():
 		return
+
+	if audio.is_randomizer or audio.is_interactive or audio.is_playlist:
+		audio.call_deferred("stop")
+		return
 	
 	var timer: Timer = _setup_timer_2d(audio_name)
 	
@@ -268,6 +312,10 @@ func stop_audio_3d(audio_name: String) -> void:
 		return
 		
 	if not audio.is_inside_tree():
+		return
+
+	if audio.is_randomizer or audio.is_interactive or audio.is_playlist:
+		audio.call_deferred("stop")
 		return
 	
 	var timer: Timer = _setup_timer_3d(audio_name)
