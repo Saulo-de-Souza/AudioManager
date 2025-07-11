@@ -723,6 +723,7 @@ func _get_audio_controller_3d(_audio_name: String) -> AudioManagerController3D:
 
 
 func _warning_audio(_audio: Variant) -> void:
+	_audio._define_duration()
 	if not _audio.audio_stream:
 		push_warning("The STREAM property cannot be null. (%s)" % _audio.audio_name)
 	if _audio.duration <= 0.0 and not (_audio.is_randomizer or _audio.is_interactive or _audio.is_synchronized or _audio.is_playlist):
