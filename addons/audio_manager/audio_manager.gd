@@ -44,6 +44,9 @@ var audios_manager_controller_omni: Dictionary = {}
 var audios_manager_controller_2d: Dictionary = {}
 var audios_manager_controller_3d: Dictionary = {}
 
+signal finished_omni(audio_name: String)
+signal finished_2d(audio_name: String)
+signal finished_3d(audio_name: String)
 
 func _ready() -> void:
 	_init_audios_omni()
@@ -293,7 +296,7 @@ func stop_audio_2d(audio_name: String) -> void:
 		
 	if not audio.is_inside_tree():
 		return
-
+	
 	if audio.is_randomizer or audio.is_interactive or audio.is_playlist:
 		audio.call_deferred("stop")
 		return
@@ -461,6 +464,21 @@ func continue_all_3d() -> void:
 	pass
 
 
+func is_playing_omni(audio_name: String) -> bool:
+	var audio: AudioMangerOmni = get_audio_omni(audio_name)
+	return audio._owner.playing if audio else false
+	
+	
+func is_playing_2d(audio_name: String) -> bool:
+	var audio: AudioManger2D = get_audio_2d(audio_name)
+	return audio._owner.playing if audio else false
+
+
+func is_playing_3d(audio_name: String) -> bool:
+	var audio: AudioManger3D = get_audio_3d(audio_name)
+	return audio._owner.playing if audio else false
+	
+	
 ## Get audio 3D (AudioManger3D)
 func get_audio_3d(_audio_name: String) -> AudioManger3D:
 	for aud in audios_3d:
@@ -690,7 +708,9 @@ func _on_timer_timeout_omni(_audio: AudioManagerControllerOmni, _audio_name: Str
 	if _audio.loop:
 		cb.call()
 	else:
-		if not _audio.is_playlist: _audio.stop()
+		if not _audio.is_playlist:
+			_audio.stop()
+			emit_signal("finished_omni", _audio_name)
 	pass
 
 
@@ -698,7 +718,9 @@ func _on_timer_timeout_2d(_audio: AudioManagerController2D, _audio_name: String,
 	if _audio.loop:
 		cb.call()
 	else:
-		if not _audio.is_playlist: _audio.stop()
+		if not _audio.is_playlist:
+			_audio.stop()
+			emit_signal("finished_2d", _audio_name)
 	pass
 	
 	
@@ -706,7 +728,9 @@ func _on_timer_timeout_3d(_audio: AudioManagerController3D, _audio_name: String,
 	if _audio.loop:
 		cb.call()
 	else:
-		if not _audio.is_playlist: _audio.stop()
+		if not _audio.is_playlist:
+			_audio.stop()
+			emit_signal("finished_3d", _audio_name)
 	pass
 
 
