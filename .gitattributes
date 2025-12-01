@@ -1,6 +1,12 @@
+* text=auto eol=lf
+
+/assets export-ignore
+/screenshots export-ignore
 .gitignore export-ignore
 .gitattributes export-ignore
 LICENSE.md export-ignore
 README.md export-ignore
+README_AUDIO_STREAM_PLUS.md export-ignore
+README_AUDIO_STREAM_PLUS_2D.md export-ignore
+README_AUDIO_STREAM_PLUS_3D.md export-ignore
 gp.bat export-ignore
-addons/audio_manager/images/screenshots export-ignore

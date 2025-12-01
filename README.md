@@ -1,339 +1,833 @@
-# AudioManager - Advanced Audio Management for Godot
+<h1 align="center">Audio Manager</h1>
+<div align="center">
+  <img src="addons/audio_manager/icons/icon.svg" width="200" height="200">
+</div>
+<h3 align="center">Plugin for Godot 4.5x</h3>
+<hr>
+<div style="max-width: 800px; margin:0px auto;">
+<p>
+  A comprehensive audio management solution for Godot projects that provides enhanced control over audio playback with support for 2D and 3D audio streams, clipping functionality, and advanced audio properties.
+</p>
 
-**AudioManager** is a powerful plugin for the Godot Engine that simplifies and enhances audio management in your game. It supports **Omni**, **2D**, and **3D** audio types, allowing you to control playback, trimming, looping, and various audio properties from a single node. With this plugin, you can easily manage multiple audio tracks, apply effects like distance-based attenuation, and control playback programmatically.
+<p>
+<b>Audio Manager</b> manages 3 main classes: <b>AudioMangerPlus</b>, <b>AudioMangerPlus2D</b>, and <b>AudioMangerPlus3D</b>, each representing the native Godot classes <b>AudioStreamPlayer</b>, <b>AudioStreamPlayer2D</b>, and <b>AudioStreamPlayer3D</b>, respectively.
+</p>
 
-## Features
+<p>
+<b>AudioMangerPlus</b> (omni, 2D, and 3D) replaces the old Audio Manager v1.x classes (<b>AudioMangerOmni</b>, <b>AudioManger2D</b>, and <b>AudioManger3D</b>). These 3 new nodes come with the package, and you can add them separately without needing AudioManager if you wish.
+</p>
 
-- **Unified Audio Control**: Manage Omni, 2D, and 3D audio from a single node.
-- **Audio Trimming**: Set custom start and end times for each audio track.
-- **Looping Support**: Enable looping for any audio, even if the file doesn’t natively support it.
-- **Loop Offset**: Add an offset for smooth looping in non-seamless audio files.
-- **Playback Control**: Play, pause, stop, and resume audio by name or in bulk.
-- **Distance-Based Audio**: Apply volume attenuation based on the listener’s distance (for 2D and 3D audio).
-- **Customizable Properties**: Adjust volume, pitch, max distance, and more for each audio track.
-- **Auto-Play**: Start audio playback automatically when the scene loads.
-- **Editor Integration**: Configure all options directly in the Godot editor.
+<p>
+What <b>AudioManger</b> can do for you:
+</p>
 
-## How It Works
+<p>
+<b>1-</b> Currently, Godot's native Interactive stream does not emit a <b>finished</b> signal. With the new classes AudioStreamPlus, AudioStreamPlus2D, AudioStreamPlus3D, and AudioMangerPlus along with AudioManger, this is now possible.
+</p>
 
-The **AudioManager** centralizes audio management in Godot, allowing you to define and control multiple audio tracks (Omni, 2D, and 3D) within a single node. It uses custom resource types (`AudioMangerOmni`, `AudioManger2D`, `AudioManger3D`) to configure each track’s properties, such as trimming, looping, and playback settings. The plugin internally handles the creation and control of audio players and timers, providing a simple API for programmatic playback control.
+<p>
+<b>2-</b> Version 1.x did not have support for web games, but now it does! If you mark the audio as looping now, it will behave on the web without even having to re-import the audio as looping. In other words, now you just need to mark in the Godot inspector that you want the audio loop, and it will work for the web as well.
+</p>
 
-The AudioManager node has a parent property (`target_parent_audios`) for 2D and 3D audio, and if this property is not set, the 2D and 3D audio are inserted into the parent node from where the AudioManager was inserted. This enables features such as audio attenuation and other positional effects based on the position of the AudioManager's parent node.
+<p>
+<b>3-</b> Due to limitations for web games, the web javascript API kills game processing when it loses focus. That is, if you navigate outside the browser tab, it causes unexpected behavior. With this in mind, this version 2x now has the pause_onblur option, which, if marked as true, pauses the audio and emits a signal.
+</p>
 
-In addition to 2D and 3D audio, you have the `omni` option which behaves like Godot's native **AudioStreamPlayer** node.
+<p>
+  <b>4-</b> The plugin now has better performance. It has been completely rewritten. Therefore, use <b>Godot 4.5x</b> or higher.
+</p>
 
-Note: You cannot configure clipper and loop for AudioStreamRandomizer, AudioStreamSynchronized and AudioStreamPlaylist.
+<p>
+ <b>5-</b> Some native Godot features lack support for pitch scale and max polyphony in some audio files with playlists and synchronized audio. If you forget this, the plugin will warn you in the console.
+</p>
 
-## Installation
+<p>
+The <b>Audio Manager</b> inserts audio files into the parent node for omni audio files (AudioManagerPlus), and for AudioManagerPlus2D and AudioManagerPlus3D audio files, you can choose the parent of each audio group in the inspector using the <b>parent_2d</b> and <b>parent_3d</b> properties. Once these properties are defined, the 2D and 3D audio files are reparented to these nodes, allowing you to take full advantage of proximity sound effects, for example.
+</p>
 
-1. Download the plugin files.
-2. Extract the files into the `res://addons/` directory of your Godot project.
-3. Enable the plugin in Godot by going to `Project > Project Settings > Plugins` and activating **AudioManager**.
+<p><b>Notes</b>:</p>
+<p>
+When using the pause_onblur mode, be aware that if you are running the game and change any properties in the inspector, the audio will pause, and you might forget about it. However, the plugin will warn you in the console that the audio has <b>paused</b>, so leave the console open so you don't forget.
+</p>
+</div>
 
-## Usage
+<hr style="border-width:5px; margin-top:50px;margin-bottom:50px">
+<h1 align="center"> Audio Manager Plus </h1>
+<div align="center">
+<img src="addons/audio_manager/icons/audio_stream_plus_res.svg" width="100">
+</div>
+<h3 align="center">Properties</h3>
+<table align="center">
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>audio_name</code></td>
+      <td>String</td>
+      <td>Unique name for the audio file</td>
+    </tr>
+    <tr>
+      <td><code>stream</code></td>
+      <td>AudioStream</td>
+      <td>Audio stream to be played</td>
+    </tr>
+    <tr>
+      <td><code>use_clipper</code></td>
+      <td>bool</td>
+      <td>Enable/disable clipper functionality</td>
+    </tr>
+    <tr>
+      <td><code>start_time</code></td>
+      <td>float</td>
+      <td>Start time in seconds when clipper is enabled</td>
+    </tr>
+    <tr>
+      <td><code>end_time</code></td>
+      <td>float</td>
+      <td>End time in seconds when clipper is enabled</td>
+    </tr>
+    </tr>
+    <tr>
+      <td><code>autoplay</code></td>
+      <td>bool</td>
+      <td>Auto-play when entering tree</td>
+    </tr>
+    <tr>
+      <td><code>loop</code></td>
+      <td>bool</td>
+      <td>Enable loop playback</td>
+    </tr>
+    <tr>
+      <td><code>volume_db</code></td>
+      <td>float</td>
+      <td>Volume in decibels</td>
+    </tr>
+    <tr>
+      <td><code>pitch_scale</code></td>
+      <td>float</td>
+      <td>Pitch and tempo multiplier</td>
+    </tr>
+    <tr>
+      <td><code>max_polyphony</code></td>
+      <td>int</td>
+      <td>Maximum simultaneous sounds</td>
+    </tr>
+    <tr>
+      <td><code>pause_onblur</code></td>
+      <td>bool</td>
+      <td>Pause on browser tab blur</td>
+    </tr>
+    <tr>
+      <td><code>mix_target</code></td>
+      <td>AudioStreamPlayer.MixTarget</td>
+      <td>Audio mix target channels</td>
+    </tr>
+    <tr>
+      <td><code>playback_type</code></td>
+      <td>AudioServer.PlaybackType</td>
+      <td>Playback type override</td>
+    </tr>
+    <tr>
+      <td><code>bus</code></td>
+      <td>StringName</td>
+      <td>Audio bus name</td>
+    </tr>
+  </tbody>
+</table>
+<h3 align="center">Methods</h3>
+<table align="center">
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Parameters</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>play_plus(audio_name, from_position)</code></td>
+      <td>audio_name: String, from_position: Float</td>
+      <td>Play audio stream</td>
+    </tr>
+    <tr>
+      <td><code>stop_plus(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Stop audio playback</td>
+    </tr>
+    <tr>
+      <td><code>pause_plus(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Pause audio playback</td>
+    </tr>
+    <tr>
+      <td><code>unpause_plus(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Resume audio playback</td>
+    </tr>
+    <tr>
+      <td><code>add_plus(audio_name, audio_plus)</code></td>
+      <td>audio_name: String, audio_plus: AudioManagerPlus</td>
+      <td>Add new audio</td>
+    </tr>
+    <tr>
+      <td><code>remove_plus(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Remove audio</td>
+    </tr>
+    <tr>
+      <td><code>is_plus_playing(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Check if playing</td>
+    </tr>
+    <tr>
+      <td><code>is_plus_paused(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Check if paused</td>
+    </tr>
+    <tr>
+      <td><code>get_plus(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Get audio stream</td>
+    </tr>
+    <tr>
+      <td><code>get_all_plus()</code></td>
+      <td>-</td>
+      <td>Get all audio streams</td>
+    </tr>
+    <tr>
+      <td><code>find_plus_index(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Find audio index</td>
+    </tr>
+    <tr>
+      <td><code>has_plus(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Check if audio exists</td>
+    </tr>
+    <tr>
+      <td><code>get_plus_length(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Get stream length</td>
+    </tr>
+    <tr>
+      <td><code>get_plus_playback_position(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Get playback position</td>
+    </tr>
+    <tr>
+      <td><code>get_plus_stream_playback(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Get stream playback</td>
+    </tr>
+    <tr>
+      <td><code>has_plus_stream_playback(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Check if has playback</td>
+    </tr>
+    <tr>
+      <td><code>seek_plus(audio_name, to_position)</code></td>
+      <td>audio_name: String, to_position: Float</td>
+      <td>Seek to position</td>
+    </tr>
+  </tbody>
+</table>
+<h3 align="center">Signals</h3>
+<table align="center">
+  <thead>
+    <tr>
+      <th>Signal</th>
+      <th>Parameters</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>finished_plus</code></td>
+      <td>audio_name: String</td>
+      <td>Emitted when audio finishes</td>
+    </tr>
+    <tr>
+      <td><code>finished_plus_loop_in_clipper</code></td>
+      <td>audio_name: String</td>
+      <td>Emitted when looped audio finishes in clipper</td>
+    </tr>
+    <tr>
+      <td><code>pause_unpause_changed_plus</code></td>
+      <td>audio_name: String, pause: Boolean</td>
+      <td>Emitted when audio pauses/unpauses</td>
+    </tr>
+  </tbody>
+</table>
 
-### Adding Audio Tracks
+<hr style="border-width:5px; margin-top:50px;margin-bottom:50px">
+<h1 align="center"> Audio Manager Plus 2D </h1>
+<div align="center">
+<img src="addons/audio_manager/icons/audio_stream_plus_2d_res.svg" width="100">
+</div>
+<h3 align="center">Properties</h3>
+<table align="center">
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>audio_name</code></td>
+      <td>String</td>
+      <td>Unique name for the audio file</td>
+    </tr>
+    <tr>
+      <td><code>stream</code></td>
+      <td>AudioStream</td>
+      <td>Audio stream to be played</td>
+    </tr>
+    <tr>
+      <td><code>use_clipper</code></td>
+      <td>bool</td>
+      <td>Enable/disable clipper functionality</td>
+    </tr>
+    <tr>
+      <td><code>start_time</code></td>
+      <td>float</td>
+      <td>Start time in seconds when clipper is enabled</td>
+    </tr>
+    <tr>
+      <td><code>end_time</code></td>
+      <td>float</td>
+      <td>End time in seconds when clipper is enabled</td>
+    </tr>
+    <tr>
+      <td><code>autoplay</code></td>
+      <td>bool</td>
+      <td>Auto-play when entering tree</td>
+    </tr>
+    <tr>
+      <td><code>loop</code></td>
+      <td>bool</td>
+      <td>Enable loop playback</td>
+    </tr>
+    <tr>
+      <td><code>volume_db</code></td>
+      <td>float</td>
+      <td>Volume in decibels</td>
+    </tr>
+    <tr>
+      <td><code>pitch_scale</code></td>
+      <td>float</td>
+      <td>Pitch and tempo multiplier</td>
+    </tr>
+    <tr>
+      <td><code>max_polyphony</code></td>
+      <td>int</td>
+      <td>Maximum simultaneous sounds</td>
+    </tr>
+    <tr>
+      <td><code>pause_onblur</code></td>
+      <td>bool</td>
+      <td>Pause on browser tab blur</td>
+    </tr>
+    <tr>
+      <td><code>playback_type</code></td>
+      <td>AudioServer.PlaybackType</td>
+      <td>Playback type override</td>
+    </tr>
+    <tr>
+      <td><code>bus</code></td>
+      <td>StringName</td>
+      <td>Audio bus name</td>
+    </tr>
+    <tr>
+      <td><code>max_distance</code></td>
+      <td>float</td>
+      <td>Maximum hearing distance</td>
+    </tr>
+    <tr>
+      <td><code>panning_strength</code></td>
+      <td>float</td>
+      <td>Panning strength multiplier</td>
+    </tr>
+    <tr>
+      <td><code>attenuation</code></td>
+      <td>float</td>
+      <td>Distance attenuation exponent</td>
+    </tr>
+    <tr>
+      <td><code>area_mask</code></td>
+      <td>int</td>
+      <td>Area2D layers affecting sound</td>
+    </tr>
+  </tbody>
+</table>
+<h3 align="center">Methods</h3>
+<table align="center">
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Parameters</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>play_plus2d(audio_name, from_position)</code></td>
+      <td>audio_name: String, from_position: Float</td>
+      <td>Play 2D audio stream</td>
+    </tr>
+    <tr>
+      <td><code>stop_plus2d(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Stop 2D audio playback</td>
+    </tr>
+    <tr>
+      <td><code>pause_plus2d(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Pause 2D audio playback</td>
+    </tr>
+    <tr>
+      <td><code>unpause_plus2d(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Resume 2D audio playback</td>
+    </tr>
+    <tr>
+      <td><code>add_plus2d(audio_name, audio_plus2d)</code></td>
+      <td>audio_name: String, audio_plus2d: AudioManagerPlus2D</td>
+      <td>Add new 2D audio</td>
+    </tr>
+    <tr>
+      <td><code>remove_plus2d(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Remove 2D audio</td>
+    </tr>
+    <tr>
+      <td><code>is_plus2d_playing(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Check if 2D audio playing</td>
+    </tr>
+    <tr>
+      <td><code>is_plus2d_paused(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Check if 2D audio paused</td>
+    </tr>
+    <tr>
+      <td><code>get_plus2d(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Get 2D audio stream</td>
+    </tr>
+    <tr>
+      <td><code>get_all_plus2d()</code></td>
+      <td>-</td>
+      <td>Get all 2D audio streams</td>
+    </tr>
+    <tr>
+      <td><code>find_plus2d_index(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Find 2D audio index</td>
+    </tr>
+    <tr>
+      <td><code>has_plus2d(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Check if 2D audio exists</td>
+    </tr>
+    <tr>
+      <td><code>get_plus2d_length(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Get 2D stream length</td>
+    </tr>
+    <tr>
+      <td><code>get_plus2d_playback_position(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Get 2D playback position</td>
+    </tr>
+    <tr>
+      <td><code>get_plus2d_stream_playback(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Get 2D stream playback</td>
+    </tr>
+    <tr>
+      <td><code>has_plus2d_stream_playback(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Check if 2D has playback</td>
+    </tr>
+    <tr>
+      <td><code>seek_plus2d(audio_name, to_position)</code></td>
+      <td>audio_name: String, to_position: Float</td>
+      <td>Seek 2D audio position</td>
+    </tr>
+  </tbody>
+</table>
+<h3 align="center">Signals</h3>
+<table align="center">
+  <thead>
+    <tr>
+      <th>Signal</th>
+      <th>Parameters</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>finished_plus2d</code></td>
+      <td>audio_name: String</td>
+      <td>Emitted when 2D audio finishes</td>
+    </tr>
+    <tr>
+      <td><code>finished_plus2d_loop_in_clipper</code></td>
+      <td>audio_name: String</td>
+      <td>Emitted when 2D looped audio finishes in clipper</td>
+    </tr>
+    <tr>
+      <td><code>pause_unpause_changed_plus2d</code></td>
+      <td>audio_name: String, pause: Boolean</td>
+      <td>Emitted when 2D audio pauses/unpauses</td>
+    </tr>
+  </tbody>
+</table>
 
-1. Add an **AudioManager** node to your scene.
-2. In the **Inspector**, configure the audio lists:
-   - **Omni**: For global audio (e.g., background music).
-   - **2D**: For positional audio in 2D space.
-   - **3D**: For positional audio in 3D space.
-3. For each audio type, add entries to the respective arrays (`audios_omni`, `audios_2d`, `audios_3d`).
-4. Configure each audio entry with properties like `audio_name`, `audio_stream`, `start_time`, `end_time`, `loop`, `auto_play`, etc.
+<hr style="border-width:5px; margin-top:50px;margin-bottom:50px">
+<h1 align="center"> Audio Manager Plus 3D </h1>
+<div align="center">
+<img src="addons/audio_manager/icons/audio_stream_plus_3d_res.svg" width="100">
+</div>
+<h3 align="center">Properties</h3>
+<table align="center">
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>audio_name</code></td>
+      <td>String</td>
+      <td>Unique name for the audio file</td>
+    </tr>
+    <tr>
+      <td><code>stream</code></td>
+      <td>AudioStream</td>
+      <td>Audio stream to be played</td>
+    </tr>
+    <tr>
+      <td><code>use_clipper</code></td>
+      <td>bool</td>
+      <td>Enable/disable clipper functionality</td>
+    </tr>
+    <tr>
+      <td><code>start_time</code></td>
+      <td>float</td>
+      <td>Start time in seconds when clipper is enabled</td>
+    </tr>
+    <tr>
+      <td><code>end_time</code></td>
+      <td>float</td>
+      <td>End time in seconds when clipper is enabled</td>
+    </tr>
+    <tr>
+      <td><code>autoplay</code></td>
+      <td>bool</td>
+      <td>Auto-play when entering tree</td>
+    </tr>
+    <tr>
+      <td><code>loop</code></td>
+      <td>bool</td>
+      <td>Enable loop playback</td>
+    </tr>
+    <tr>
+      <td><code>volume_db</code></td>
+      <td>float</td>
+      <td>Volume in decibels</td>
+    </tr>
+    <tr>
+      <td><code>max_db</code></td>
+      <td>float</td>
+      <td>Maximum sound level in decibels</td>
+    </tr>
+    <tr>
+      <td><code>pitch_scale</code></td>
+      <td>float</td>
+      <td>Pitch and tempo multiplier</td>
+    </tr>
+    <tr>
+      <td><code>max_polyphony</code></td>
+      <td>int</td>
+      <td>Maximum simultaneous sounds</td>
+    </tr>
+    <tr>
+      <td><code>unit_size</code></td>
+      <td>float</td>
+      <td>Unit size for attenuation</td>
+    </tr>
+    <tr>
+      <td><code>max_distance</code></td>
+      <td>float</td>
+      <td>Maximum hearing distance</td>
+    </tr>
+    <tr>
+      <td><code>pause_onblur</code></td>
+      <td>bool</td>
+      <td>Pause on browser tab blur</td>
+    </tr>
+    <tr>
+      <td><code>playback_type</code></td>
+      <td>AudioServer.PlaybackType</td>
+      <td>Playback type override</td>
+    </tr>
+    <tr>
+      <td><code>doppler_tracking</code></td>
+      <td>AudioStreamPlayer3D.DopplerTracking</td>
+      <td>Doppler effect tracking</td>
+    </tr>
+    <tr>
+      <td><code>bus</code></td>
+      <td>StringName</td>
+      <td>Audio bus name</td>
+    </tr>
+    <tr>
+      <td><code>panning_strength</code></td>
+      <td>float</td>
+      <td>Panning strength multiplier</td>
+    </tr>
+    <tr>
+      <td><code>area_mask</code></td>
+      <td>int</td>
+      <td>Area2D layers affecting sound</td>
+    </tr>
+    <tr>
+      <td><code>emission_angle_enabled</code></td>
+      <td>bool</td>
+      <td>Enable emission angle attenuation</td>
+    </tr>
+    <tr>
+      <td><code>emission_angle_degrees</code></td>
+      <td>float</td>
+      <td>Emission angle in degrees</td>
+    </tr>
+    <tr>
+      <td><code>emission_angle_filter_attenuation_db</code></td>
+      <td>float</td>
+      <td>Attenuation in decibels</td>
+    </tr>
+    <tr>
+      <td><code>attenuation_model</code></td>
+      <td>AudioStreamPlayer3D.AttenuationModel</td>
+      <td>Attenuation calculation model</td>
+    </tr>
+    <tr>
+      <td><code>attenuation_filter_cutoff_hz</code></td>
+      <td>int</td>
+      <td>Filter cutoff frequency</td>
+    </tr>
+    <tr>
+      <td><code>attenuation_filter_db</code></td>
+      <td>float</td>
+      <td>Filter attenuation in decibels</td>
+    </tr>
+  </tbody>
+</table>
+<h3 align="center">Methods</h3>
+<table align="center">
+  <thead>
+    <tr>
+      <th>Method</th>
+      <th>Parameters</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>play_plus3d(audio_name, from_position)</code></td>
+      <td>audio_name: String, from_position: Float</td>
+      <td>Play 3D audio stream</td>
+    </tr>
+    <tr>
+      <td><code>stop_plus3d(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Stop 3D audio playback</td>
+    </tr>
+    <tr>
+      <td><code>pause_plus3d(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Pause 3D audio playback</td>
+    </tr>
+    <tr>
+      <td><code>unpause_plus3d(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Resume 3D audio playback</td>
+    </tr>
+    <tr>
+      <td><code>add_plus3d(audio_name, audio_plus3d)</code></td>
+      <td>audio_name: String, audio_plus3d: AudioManagerPlus3D</td>
+      <td>Add new 3D audio</td>
+    </tr>
+    <tr>
+      <td><code>remove_plus3d(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Remove 3D audio</td>
+    </tr>
+    <tr>
+      <td><code>is_plus3d_playing(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Check if 3D audio playing</td>
+    </tr>
+    <tr>
+      <td><code>is_plus3d_paused(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Check if 3D audio paused</td>
+    </tr>
+    <tr>
+      <td><code>get_plus3d(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Get 3D audio stream</td>
+    </tr>
+    <tr>
+      <td><code>get_all_plus3d()</code></td>
+      <td>-</td>
+      <td>Get all 3D audio streams</td>
+    </tr>
+    <tr>
+      <td><code>find_plus3d_index(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Find 3D audio index</td>
+    </tr>
+    <tr>
+      <td><code>has_plus3d(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Check if 3D audio exists</td>
+    </tr>
+    <tr>
+      <td><code>get_plus3d_length(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Get 3D stream length</td>
+    </tr>
+    <tr>
+      <td><code>get_plus3d_playback_position(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Get 3D playback position</td>
+    </tr>
+    <tr>
+      <td><code>get_plus3d_stream_playback(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Get 3D stream playback</td>
+    </tr>
+    <tr>
+      <td><code>has_plus3d_stream_playback(audio_name)</code></td>
+      <td>audio_name: String</td>
+      <td>Check if 3D has playback</td>
+    </tr>
+    <tr>
+      <td><code>seek_plus3d(audio_name, to_position)</code></td>
+      <td>audio_name: String, to_position: Float</td>
+      <td>Seek 3D audio position</td>
+    </tr>
+  </tbody>
+</table>
+<h3 align="center">Signals</h3>
+<table align="center">
+  <thead>
+    <tr>
+      <th>Signal</th>
+      <th>Parameters</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>finished_plus3d</code></td>
+      <td>audio_name: String</td>
+      <td>Emitted when 3D audio finishes</td>
+    </tr>
+    <tr>
+      <td><code>finished_plus3d_loop_in_clipper</code></td>
+      <td>audio_name: String</td>
+      <td>Emitted when 3D looped audio finishes in clipper</td>
+    </tr>
+    <tr>
+      <td><code>pause_unpause_changed_plus3d</code></td>
+      <td>audio_name: String, pause: Boolean</td>
+      <td>Emitted when 3D audio pauses/unpauses</td>
+    </tr>
+  </tbody>
+</table>
 
-### Controlling Audio Playback
+<hr style="border-width:5px; margin-top:50px;margin-bottom:50px">
+<h3>Basic Usage Example</h3>
 
-You can control audio playback using the following methods:
+```gdscript
+# Create AudioManager
+var audio_manager: AudioManager = AudioManager.new()
 
-#### Omni Audio
+# Create AudioManagerPlus
+var audio_plus: AudioManagerPlus = AudioManagerPlus.new()
 
-```cpp
-# Play omni audio
-$audio_manager.play_audio_omni("audio_name")
+# Configure AudioManagerPlus
+audio_plus.stream = preload("res://assets/audios/door.mp3")
+audio_plus.use_clipper = true
+audio_plus.start_time = 0.5
+audio_plus.end_time = 1.2
+audio_plus.loop = true
+
+# Connect loop signal
+audio_manager.finished_plus_loop_in_clipper.connect(func(audio_name: String):
+		print("Audio Name: %s" %audio_name)
+		)
+
+# Connect finished signal
+	audio_manager.finished_plus.connect(func(audio_name: String):
+		print("Finished: %s" %audio_name)
+		)
+
+# Add AudioManager to scene tree
+add_child(audio_manager)
+
+# Add AudioManagerPlus in to AudioManager
+audio_manager.add_plus("door_open",audio_plus)
+
+# Play AudioManagerPlus from AudioManager
+audio_manager.play_plus("door_open")
 ```
 
-```cpp
-# Pause omni audio
-$audio_manager.pause_audio_omni("audio_name")
-```
-
-```cpp
-# Resume omni audio
-$audio_manager.continue_audio_omni("audio_name")
-```
-
-```cpp
-# Stop omni audio
-$audio_manager.stop_audio_omni("audio_name")
-```
-
-#### 2D Audio
-
-```cpp
-# Play 2d audio
-$audio_manager.play_audio_2d("audio_name")
-```
-
-```cpp
-# Pause 2d audio
-$audio_manager.pause_audio_2d("audio_name")
-```
-
-```cpp
-# Resume 2d audio
-$audio_manager.continue_audio_2d("audio_name")
-```
-
-```cpp
-# Stop 2d audio
-$audio_manager.stop_audio_2d("audio_name")
-```
-
-#### 3D Audio
-
-```cpp
-# Play 3d audio
-$audio_manager.play_audio_3d("audio_name")
-```
-
-```cpp
-# Pause 3d audio
-$audio_manager.pause_audio_3d("audio_name")
-```
-
-```cpp
-# Resume 3d audio
-$audio_manager.continue_audio_3d("audio_name")
-```
-
-```cpp
-# Stop 3d audio
-$audio_manager.stop_audio_3d("audio_name")
-```
-
-### Bulk Playback Control
-
-You can also control all audio tracks of a specific type or all types at once:
-
-- **Play All Audio**:
-
-  ```cpp
-   # Plays all Omni, 2D, and 3D audio
-   $audio_manager.play_all()
-  ```
-
-  ```cpp
-   # Plays all Omni audio
-   $audio_manager.play_all_omni()
-  ```
-
-  ```cpp
-   # Plays all 2D audio
-   $audio_manager.play_all_2d()
-  ```
-
-  ```cpp
-   # Plays all 3D audio
-   $audio_manager.play_all_3d()
-  ```
-
-- **Stop All Audio**:
-
-  ```cpp
-   # Stops all Omni, 2D, and 3D audio
-   $audio_manager.stop_all()
-  ```
-
-  ```cpp
-   # Stops all Omni audio
-   $audio_manager.stop_all_omni()
-  ```
-
-  ```cpp
-   # Stops all 2D audio
-   $audio_manager.stop_all_2d()
-  ```
-
-  ```cpp
-   # Stops all 3D audio
-   $audio_manager.stop_all_3d()
-  ```
-
-- **Pause All Audio**:
-
-  ```cpp
-   # Pauses all Omni, 2D, and 3D audio
-   $audio_manager.pause_all()
-  ```
-
-  ```cpp
-   # Pauses all Omni audio
-   $audio_manager.pause_all_omni()
-  ```
-
-  ```cpp
-   # Pauses all 2D audio
-   $audio_manager.pause_all_2d()
-  ```
-
-  ```cpp
-   # Pauses all 3D audio
-   $audio_manager.pause_all_3d()
-  ```
-
-- **Resume All Audio**:
-
-  ```cpp
-  # Resumes all paused Omni, 2D, and 3D audio
-  $audio_manager.continue_all()
-  ```
-
-  ```cpp
-  # Resumes all paused Omni audio
-  $audio_manager.continue_all_omni()
-  ```
-
-  ```cpp
-  # Resumes all paused 2D audio
-  $audio_manager.continue_all_2d()
-  ```
-
-  ```cpp
-  # Resumes all paused 3D audio
-  $audio_manager.continue_all_3d()
-  ```
-
-### Retrieving Audio Resources
-
-You can access audio resources directly to modify their properties at runtime:
-
-- **Get Audio Resource**:
-
-  ```v
-  var audio_omni = $audio_manager.get_audio_omni("audio_name")
-  ```
-
-  ```v
-  var audio_2d = $audio_manager.get_audio_2d("audio_name")
-  ```
-
-  ```v
-  var audio_3d = $audio_manager.get_audio_3d("audio_name")
-  ```
-
-## Configuration
-
-Each audio track can be configured with the following properties:
-
-- **Audio Name**: A unique identifier for the audio track.
-- **Audio Stream**: The audio file to be played.
-- **Start Time**: The time (in seconds) to start playing the audio.
-- **End Time**: The time (in seconds) to stop the audio.
-- **Use Clipper**: Whether to use trimming (start and end times).
-- **Loop**: Enables looping for the audio.
-- **Auto-Play**: Plays the audio automatically when the scene loads.
-- **Volume DB**: The volume level in decibels.
-- **Pitch Scale**: The pitch adjustment.
-- **Max Distance** (2D and 3D): The maximum distance for audio attenuation.
-- **Max Polyphony**: The maximum number of simultaneous streams.
-- **Panning Strength** (2D and 3D): The intensity of the panning effect.
-- **Bus**: (Omni, 2D and 3D)
-- **Playback Type**: (Omni, 2D and 3D)
-- **Area Mask**: (2D and 3D)
-- **Attenuation**: (2D)
-- **Emission Angle Enabled**: (3D)
-- **Emission Angle Degrees**: (3D)
-- **Emission Angle Filter Attenuation db**: (3D)
-- **Attenuation Filter Cutoff hz**: (3D)
-- **Attenuation Filter db**: (3D)
-- **Doppler Tracking**: (3D)
-- **unit_size**: (3D)
-- **loop_offset**: (Omni, 2D and 3D)
-- **mix_target**: (Omni)
-
-These properties can be set directly in the Godot editor via the **Inspector** by selecting an audio entry in the **AudioManager** node.
-
-### Positional Audio Configuration (2D and 3D)
-
-The `target_parent_audios_2d` and `target_parent_audios_3d` properties define the parent node where 2D and 3D audio players are instantiated, allowing audio to have specific positions in 2D or 3D scenes. This is crucial for effects like distance-based volume attenuation, panning (in 2D), and spatial audio (in 3D):
-
-- **`target_parent_audios_2d`**: Defines the parent node (type `Node2D`) for 2D audio players. Link it to a node with a position in the 2D scene (e.g., a character) to enable positional effects like volume variation and panning based on the listener’s distance and location.
-- **`target_parent_audios_3d`**: Defines the parent node (type `Node3D`) for 3D audio players. Link it to a node with a position in 3D space (e.g., an object or enemy) to enable spatial audio effects like volume attenuation, sound direction, and Doppler, depending on the listener’s relative position.
-
-#### Important: Audio Listener Requirement
-
-For audio to be heard and positional effects to work, **you must** have an audio listener configured in the scene:
-
-- For **2D audio**: Add an `AudioListener2D` node or set a 2D camera as the listener (enable the `current` property).
-- For **3D audio**: Add an `AudioListener3D` node or set a 3D camera as the listener (enable the `current` property).
-  **Warning**: Without an audio listener (`AudioListener2D` or `AudioListener3D`) or a properly configured camera, audio will not play correctly, and distance or positional effects will not function.
-
-## Examples
-
-### Example 1: Playing Background Music (Omni Audio)
-
-1. Add an **AudioManager** node to your scene.
-2. In the **Inspector**, under **Omni**, add a new audio entry.
-3. Set **Audio Name** to `"background_music"`.
-4. Assign an audio file to **Audio Stream**.
-5. Set **Auto-Play** to `true` to start playback when the scene loads.
-
-Alternatively, play it programmatically:
-
-```v
-$audio_manager.play_audio_omni("background_music")
-```
-
-### Example 2: Playing a 3D Sound Effect
-
-1. Add an **AudioManager** node to your scene.
-2. Set **Target Parent Audios 3D** to the audio source node (e.g., a character or object).
-3. In the **Inspector**, under **3D**, add a new audio entry.
-4. Set **Audio Name** to `"explosion"`.
-5. Assign an audio file to **Audio Stream**.
-6. Configure **Max Distance** to control how far the sound can be heard.
-
-Play the sound when needed:
-
-```v
-$audio_manager.play_audio_3d("explosion")
-```
-
-### Example 3: Looping a Trimmed Audio Clip
-
-1. Add an **AudioManager** node to your scene.
-2. In the **Inspector**, under **Omni**, add a new audio entry.
-3. Set **Audio Name** to `"looped_clip"`.
-4. Assign an audio file to **Audio Stream**.
-5. Set **Use Clipper** to `true`.
-6. Set **Start Time** to `2.0` seconds and **End Time** to `10.0` seconds.
-7. Set **Loop** to `true`.
-
-This will play the audio from 2 to 10 seconds and loop it continuously.
-
-## Screenshots
-
-**Screenshot AudioManager**
-
-![Screenshot 1](./addons/audio_manager/images/screenshots/screenshot_1.png)
-
-**Screenshot Omni AudioManager**
-
-![Screenshot omni](./addons/audio_manager/images/screenshots/screenshot_omni.png)
-
-**Screenshot 2D AudioManager**
-
-![Screenshot omni](./addons/audio_manager/images/screenshots/screenshot_2d.png)
-
-**Screenshot 3D AudioManager**
-
-![Screenshot omni](./addons/audio_manager/images/screenshots/screenshot_3d.png)
-
-## License
-
-This plugin is available under the [MIT License](LICENSE.md).
-
-## Contact
-
-For support or feedback, reach out at [saulocoexi@gmail.com].
+<hr>
+<h3> Installation</h3>
+<ol>
+  <li>Download the plugin files</li>
+  <li>Place the plugin folder in your Godot project's <b>addons/directory</b></li>
+  <li>Enable the plugin in <b>Project Settings > Plugins</b></li>
+  <li>Add the AudioManager node to your scene</li>
+</ol>
+
+<hr style="border-width:5px; margin-top:50px;margin-bottom:50px">
+<h2 align="center"> Screenshots</h2>
+
+<h3 align="center">Audio Manager</h3>
+<div align="center">
+  <img src="screenshots/audio_manager_1.png">
+</div>
+
+<h3 align="center">Audio Manager Plus 3D</h3>
+<div align="center">
+  <img src="screenshots/audio_manager_2.png">
+</div>
+
+<h3 align="center">Audio Manager Plus 2D</h3>
+<div align="center">
+  <img src="screenshots/audio_manager_3.png">
+</div>
+
+<h3 align="center">Audio Manager Plus (omni)</h3>
+<div align="center">
+  <img src="screenshots/audio_manager_4.png">
+</div>
+
+<h3 align="center">Audio Manager Cover</h3>
+<div align="center">
+  <img src="screenshots/cover.png">
+</div>

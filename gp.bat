@@ -1,4 +1,6 @@
 @echo off
-call git add --all
-call git commit -m %1
-call git push origin master
+
+git add --all
+git commit -m %1
+git push origin master
+

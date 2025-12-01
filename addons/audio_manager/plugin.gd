@@ -1,26 +1,31 @@
 @tool
 extends EditorPlugin
 
-var icon_omni: CompressedTexture2D = preload("res://addons/audio_manager/images/icon-omni-16x16.png")
-var icon_2d: CompressedTexture2D = preload("res://addons/audio_manager/images/icon-2d-16x16.png")
-var icon_3d: CompressedTexture2D = preload("res://addons/audio_manager/images/icon-3d-16x16.png")
 
-var main_script: Script = preload("res://addons/audio_manager/audio_manager.gd")
+var icon = preload("res://addons/audio_manager/icons/icon.svg")
+var script_main = preload("res://addons/audio_manager/audio_manager.gd")
 
-var audio_manager_omni: Resource = preload("res://addons/audio_manager/audio_manager_omni.gd")
-var audio_manager_2d: Resource = preload("res://addons/audio_manager/audio_manager_2d.gd")
-var audio_manager_3d: Resource = preload("res://addons/audio_manager/audio_manager_3d.gd")
+var icon_plus = preload("res://addons/audio_manager/icons/audio_stream_plus_res.svg")
+var icon_plus_2d = preload("res://addons/audio_manager/icons/audio_stream_plus_2d_res.svg")
+var icon_plus_3d = preload("res://addons/audio_manager/icons/audio_stream_plus_3d_res.svg")
 
 
-func _enter_tree() -> void:
-	add_custom_type("AudioManager", "Node", main_script, icon_omni)
-	add_custom_type("AudioMangerOmni", "Resource", audio_manager_omni, icon_omni)
-	add_custom_type("AudioManger2D", "Resource", audio_manager_2d, icon_2d)
-	add_custom_type("AudioManger3D", "Resource", audio_manager_3d, icon_3d)
+var script_plus = preload("res://addons/audio_manager/resources_class/audio_manager_plus.gd")
+var script_plus_2d = preload("res://addons/audio_manager/resources_class/audio_manager_plus_2d.gd")
+var script_plus_3d = preload("res://addons/audio_manager/resources_class/audio_manager_plus_3d.gd")
 
 
-func _exit_tree() -> void:
+func _enable_plugin() -> void:
+	add_custom_type("AudioManager", "Node", script_main, icon)
+	add_custom_type("AudioManagerPlus", "Resource", script_plus, icon_plus)
+	add_custom_type("AudioManagerPlus2D", "Resource", script_plus_2d, icon_plus_2d)
+	add_custom_type("AudioManagerPlus3D", "Resource", script_plus_3d, icon_plus_3d)
+	pass
+
+
+func _disable_plugin() -> void:
 	remove_custom_type("AudioManager")
-	remove_custom_type("AudioMangerOmni")
-	remove_custom_type("AudioManger2D")
-	remove_custom_type("AudioManger3D")
+	remove_custom_type("AudioManagerPlus")
+	remove_custom_type("AudioManagerPlus2D")
+	remove_custom_type("AudioManagerPlus3D")
+	pass
