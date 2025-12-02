@@ -39,6 +39,15 @@ class_name AudioStreamPlus2D extends Node2D
 ## Fill in the start_time and end_time fields according to the audio track selected in the stream.
 @export_tool_button("FILL IN CLIPPER") var btn_fill_clipper = _on_btn_fill_clipper
 
+## Ignore time scaling for audio clipping. If you notice any lack of synchronization between audio clipping playbacks, enable this.
+## This affects behavior when the game changes time scaling.
+@export var clipper_ignore_time_scale: bool = false:
+	set(value):
+		clipper_ignore_time_scale = _can_change_clipper_ignore_time_scale(value)
+		if is_instance_valid(_timer):
+			_timer.ignore_time_scale = clipper_ignore_time_scale
+
+
 @export_subgroup("Main Controls")
 ## If true, this node calls play() when entering the tree.
 @export var autoplay: bool = false:
@@ -536,7 +545,7 @@ func _create_timer() -> Timer:
 	new_timer.set_meta("is_plus", true)
 	new_timer.one_shot = true
 	new_timer.wait_time = max(length, 0.05)
-	new_timer.ignore_time_scale = true
+	new_timer.ignore_time_scale = clipper_ignore_time_scale
 	new_timer.timeout.connect(_on_timer_timeout)
 	return new_timer
 	
@@ -792,6 +801,10 @@ func _can_change_end_time(value: float) -> float:
 		push_warning("The minimum value for end_time is zero. Consider assigning a value of zero or higher.")
 		return end_time
 
+	return value
+
+
+func _can_change_clipper_ignore_time_scale(value: bool) -> bool:
 	return value
 	
 	

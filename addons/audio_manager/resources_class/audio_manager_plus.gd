@@ -52,6 +52,16 @@ class_name AudioManagerPlus extends Resource
 		if is_instance_valid(_owner):
 			_owner.update_configuration_warnings()
 
+## Ignore time scaling for audio clipping. If you notice any lack of synchronization between audio clipping playbacks, enable this.
+## This affects behavior when the game changes time scaling.
+@export var clipper_ignore_time_scale: bool = false:
+	set(value):
+		clipper_ignore_time_scale = _can_change_clipper_ignore_time_scale(value)
+		if is_instance_valid(_audio_stream_plus):
+			_audio_stream_plus.clipper_ignore_time_scale = clipper_ignore_time_scale
+		if is_instance_valid(_owner):
+			_owner.update_configuration_warnings()
+
 
 @export_subgroup("Main Controls")
 ## If true, this node calls play() when entering the tree.
@@ -215,6 +225,7 @@ func _create_audio_stream_player() -> AudioStreamPlus:
 	new_audio.mix_target = mix_target
 	new_audio.playback_type = playback_type
 	new_audio.bus = bus
+	new_audio.clipper_ignore_time_scale = clipper_ignore_time_scale
 	if audio_name.strip_edges() != "":
 		new_audio.name = audio_name
 	else:
@@ -331,6 +342,10 @@ func _can_change_end_time(value: float) -> float:
 	return value
 
 
+func _can_change_clipper_ignore_time_scale(value: bool) -> bool:
+	return value
+
+
 func _can_change_volume_db(value: float) -> float:
 	if value < -80 or value > 80:
 		push_warning("The 'volume_db' property only accepts values ​​from -80 to 80.")
@@ -372,6 +387,7 @@ func _update_properties(_stream: AudioStream) -> void:
 	mix_target = _can_change_mix_target(mix_target)
 	playback_type = _can_change_playback_type(playback_type)
 	bus = _can_change_bus(bus)
+	clipper_ignore_time_scale = _can_change_clipper_ignore_time_scale(clipper_ignore_time_scale)
 
 	if _stream.is_class(AUDIO_STREAM_PLAYLIST_CLASS_NAME):
 		_stream.loop = loop

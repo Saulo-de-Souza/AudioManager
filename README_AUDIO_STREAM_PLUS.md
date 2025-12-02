@@ -38,23 +38,24 @@ Use it just like a regular AudioStreamPlayer node.
 
 ## Properties
 
-| Property        | Type                        | Description                                                                |
-| --------------- | --------------------------- | -------------------------------------------------------------------------- |
-| `stream`        | AudioStream                 | The audio stream to play. Setting this stops all currently playing sounds. |
-| `use_clipper`   | bool                        | Enables or disables clipper functionality.                                 |
-| `start_time`    | float                       | Start time in seconds when use_clipper is enabled.                         |
-| `end_time`      | float                       | End time in seconds when use_clipper is enabled.                           |
-| `autoplay`      | bool                        | If true, automatically plays the stream when entering the tree.            |
-| `loop`          | bool                        | Enables looping of the audio.                                              |
-| `volume_db`     | float                       | Volume in decibels.                                                        |
-| `pitch_scale`   | float                       | Pitch multiplier.                                                          |
-| `max_polyphony` | int                         | Maximum number of sounds that can play simultaneously.                     |
-| `pause_onblur`  | bool                        | Pauses the audio when the game window or browser tab loses focus.          |
-| `mix_target`    | AudioStreamPlayer.MixTarget | Audio mix target (stereo, surround, etc.).                                 |
-| `playback_type` | AudioServer.PlaybackType    | Forces playback type.                                                      |
-| `bus`           | StringName                  | Audio bus to route the sound to.                                           |
-| `is_playing`    | bool                        | Returns whether audio is currently playing or not.                         |
-| `is_paused`     | bool                        | Returns whether the audio is paused or not.                                |
+| Property                    | Type                        | Description                                                                |
+| --------------------------- | --------------------------- | -------------------------------------------------------------------------- |
+| `stream`                    | AudioStream                 | The audio stream to play. Setting this stops all currently playing sounds. |
+| `use_clipper`               | bool                        | Enables or disables clipper functionality.                                 |
+| `start_time`                | float                       | Start time in seconds when use_clipper is enabled.                         |
+| `end_time`                  | float                       | End time in seconds when use_clipper is enabled.                           |
+| `clipper_ignore_time_scale` | bool                        | Ignore time scaling for audio clipping.                                    |
+| `autoplay`                  | bool                        | If true, automatically plays the stream when entering the tree.            |
+| `loop`                      | bool                        | Enables looping of the audio.                                              |
+| `volume_db`                 | float                       | Volume in decibels.                                                        |
+| `pitch_scale`               | float                       | Pitch multiplier.                                                          |
+| `max_polyphony`             | int                         | Maximum number of sounds that can play simultaneously.                     |
+| `pause_onblur`              | bool                        | Pauses the audio when the game window or browser tab loses focus.          |
+| `mix_target`                | AudioStreamPlayer.MixTarget | Audio mix target (stereo, surround, etc.).                                 |
+| `playback_type`             | AudioServer.PlaybackType    | Forces playback type.                                                      |
+| `bus`                       | StringName                  | Audio bus to route the sound to.                                           |
+| `is_playing`                | bool                        | Returns whether audio is currently playing or not.                         |
+| `is_paused`                 | bool                        | Returns whether the audio is paused or not.                                |
 
 ---
 

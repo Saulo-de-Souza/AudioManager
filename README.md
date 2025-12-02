@@ -91,6 +91,10 @@ When using the pause_onblur mode, be aware that if you are running the game and 
       <td>float</td>
       <td>End time in seconds when clipper is enabled</td>
     </tr>
+     <tr>
+      <td><code>clipper_ignore_time_scale</code></td>
+      <td>bool</td>
+      <td>Ignore time scaling for audio clipping</td>
     </tr>
     <tr>
       <td><code>autoplay</code></td>
@@ -303,6 +307,11 @@ When using the pause_onblur mode, be aware that if you are running the game and 
       <td><code>end_time</code></td>
       <td>float</td>
       <td>End time in seconds when clipper is enabled</td>
+    </tr>
+     <tr>
+      <td><code>clipper_ignore_time_scale</code></td>
+      <td>bool</td>
+      <td>Ignore time scaling for audio clipping</td>
     </tr>
     <tr>
       <td><code>autoplay</code></td>
@@ -530,6 +539,11 @@ When using the pause_onblur mode, be aware that if you are running the game and 
       <td><code>end_time</code></td>
       <td>float</td>
       <td>End time in seconds when clipper is enabled</td>
+    </tr>
+     <tr>
+      <td><code>clipper_ignore_time_scale</code></td>
+      <td>bool</td>
+      <td>Ignore time scaling for audio clipping</td>
     </tr>
     <tr>
       <td><code>autoplay</code></td>
