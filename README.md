@@ -853,7 +853,7 @@ audio_manager.play_plus("door_open")
 
 <div align="center">
  <br>
-  <h3 align="center">Github Sponsor</h3>
+  <h3 align="center">Github Sponsors</h3>
   <a href="https://github.com/sponsors/Saulo-de-Souza" target="_blank">
   <img src="screenshots/github_sponsor_qrcode.png" width="300">
   </a>
