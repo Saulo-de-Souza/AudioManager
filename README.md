@@ -841,14 +841,33 @@ audio_manager.play_plus("door_open")
   <img src="screenshots/audio_manager_4.png">
 </div>
 
-<h3 align="center">Audio Manager Cover</h3>
+<!-- <h3 align="center">Audio Manager Cover</h3>
 <div align="center">
   <img src="screenshots/cover.png">
+</div> -->
+
+<hr style="border-width:5px; margin-top:50px;margin-bottom:50px">
+
+<h2 align="center">❤️ Support</h2>
+<h3 align="center">If this project helps you, consider supporting:</h3>
+
+<div align="center">
+ <br>
+  <h3 align="center">Github Sponsor</h3>
+  <a href="https://github.com/sponsors/Saulo-de-Souza" target="_blank">
+  <img src="screenshots/github_sponsor_qrcode.png" width="300">
+  </a>
+  <br>
+   <a href="https://github.com/sponsors/Saulo-de-Souza" target="_blank">
+   https://github.com/sponsors/Saulo-de-Souza
+   </a>
+<br><br>
+  <h3 align="center">Paypal</h3>
+  <a href="https://www.paypal.com/donate/?hosted_button_id=G24W4KL9ALH64" target="_blank">
+  <img src="screenshots/paypal_qrcode.png" width="300">
+  </a>
+  <br>
+  <a href="https://www.paypal.com/donate/?hosted_button_id=G24W4KL9ALH64" target="_blank">
+  https://www.paypal.com/donate/?hosted_button_id=G24W4KL9ALH64
+  </a>
 </div>
-
----
-
-## ❤️ Support
-
-If this project helps you, consider supporting:
-https://github.com/sponsors/Saulo-de-Souza
