@@ -845,3 +845,10 @@ audio_manager.play_plus("door_open")
 <div align="center">
   <img src="screenshots/cover.png">
 </div>
+
+---
+
+## ❤️ Support
+
+If this project helps you, consider supporting:
+https://github.com/sponsors/Saulo-de-Souza
